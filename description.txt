@@ -1,0 +1,8 @@
+Storm's Tweaks Mod is a very small mod that adds some configuration options that change some small mechanics of the game.
+This mod allows you to:
+
+-Configure the kill count for each pillar
+-Disable all damage variance for players and enemies
+-Disable dev items dropping from treasure bags
+-Allow Axes and Hammers to benefit from Mining Speed buffs.
+-Allows Mechancials tools to benefit from mining speed buffs (Drills, Chainsaws, and Jackhammers)
