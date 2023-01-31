@@ -16,8 +16,11 @@ using Terraria.ModLoader.Config;
 using Terraria.ModLoader.Config.UI;
 using Terraria.UI;
 using StormQoL;
+using Terraria.Audio;
+
 
 using static Terraria.ModLoader.ModContent;
+using Terraria.ModLoader.IO;
 
 namespace StormQoL
 {
@@ -43,7 +46,13 @@ namespace StormQoL
         // [ReloadRequired]
         public int shieldHealthExpert;
       
-        [Header("Damage Variance")]
+        [Header("Damage")]
+
+        [Label("Enable Super Crits")]
+        [Tooltip("Every percentage your weapons crit chance is above 100% is the chance for a super crit that deals x3 damage (Requires reload)")]
+        [ReloadRequired] //Yes
+        [DefaultValue(false)]
+        public bool superCrit { get; set; }
 
         [Label("Remove damage variance")]
         [Tooltip("This will remove the random spread in all damage dealt and taken (Requires reload)")]
@@ -71,20 +80,48 @@ namespace StormQoL
         [Tooltip("If you have a lot of bags to open and don't want your inventory cluttered by dev items (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
-        public bool NoInventoryClutter { get; set; }     
+        public bool NoInventoryClutter { get; set; }
+
+
+        [Label("Prevent your own explosives from harming you")]
+        [Tooltip("This will prevent any explosive item you launch/throw from inflicting self damage (requires reload)")]
+        [ReloadRequired] //Yes
+        [DefaultValue(false)]
+        public bool NoBoomBoom { get; set; }
     }
     public class StormQoL : Mod
     {
         public override void Load()
         {
-            base.Load();
+           
             if (GetInstance<Configurations>().noDamageSpread)
             {
                 //!!All credit goes to Kojo's mod called Rho's Playground!!
                 On.Terraria.Main.DamageVar += (orig, damage, luck) => (int)Math.Round(damage * Main.rand.NextFloat(1, 1)); //No damage variance
             }
+            base.Load();
+        }
+        public override void Unload()
+        {
+            base.Unload();
         }
 
+    }
+    public class Projchanges : GlobalProjectile
+    {
+        public override void SetDefaults(Projectile projectile)
+        {
+      
+            if (GetInstance<Configurations>().NoBoomBoom)
+            {
+                if (projectile.friendly)
+                {
+                    ProjectileID.Sets.RocketsSkipDamageForPlayers[projectile.type] = true;
+                }             
+            }
+            base.SetDefaults(projectile);
+
+        }
     }
     public class Itemchanges : GlobalItem
     {
@@ -101,6 +138,7 @@ namespace StormQoL
                     ItemID.Sets.PreHardmodeLikeBossBag[item.type] = true;
                 }
             }
+            
             //Mech tools
             if (GetInstance<Configurations>().FastDrill4U)
             {
@@ -138,50 +176,7 @@ namespace StormQoL
                 {
                     item.useTime = basedrillspeed * drillspeed2 / 100; //Multiple the base use time by the player's pickspeed divided by 100
                 }
-            }
-            /*if (item.type == ItemID.CobaltDrill || item.type == ItemID.PalladiumDrill)
-            {
-                item.useTime = 7 * drillspeed2 / 100;
-                //Main.NewText("Pick speed = " + 7 * drillspeed2 / 100, 47, 86, 146);
-            }
-            if (item.type == ItemID.MythrilDrill)
-            {
-                item.useTime = 6 * drillspeed2 / 100;
-            }
-            if (item.type == ItemID.OrichalcumDrill)
-            {
-                item.useTime = 5 * drillspeed2 / 100;
-            }
-            if (item.type == ItemID.AdamantiteDrill || item.type == ItemID.TitaniumDrill || item.type == ItemID.Drax || item.type == ItemID.ChlorophyteDrill)
-            {
-                item.useTime = 4 * drillspeed2 / 100;
-            }
-            if (item.type == ItemID.LaserDrill)
-            {
-                item.useTime = 6 * drillspeed2 / 100;
-            }
-            if (item.type == ItemID.SolarFlareDrill || item.type == ItemID.VortexDrill || item.type == ItemID.NebulaDrill || item.type == ItemID.StardustDrill)
-            {
-                item.useTime = 2 * drillspeed2 / 100;
-            }
-            //mine
-            if (item.type == ModContent.ItemType<Items.Tools.FastDrill>())
-            {
-                item.useTime = 5 * drillspeed2 / 100;
-            }
-            if (item.type == ModContent.ItemType<Items.Tools.FastDrill2>())
-            {
-                item.useTime = 4 * drillspeed2 / 100;
-            }
-            if (item.type == ModContent.ItemType<Items.Tools.DerplingDrill>() || item.type == ModContent.ItemType<Items.Tools.SpaceRockDrillSaw>())
-            {
-                item.useTime = 3 * drillspeed2 / 100;
-            }
-            if (item.type == ModContent.ItemType<Items.Tools.SantankDrill>())
-            {
-                item.useTime = 2 * drillspeed2 / 100;
-            }*/
-
+            }          
         }
     }
     public class Configplayereffects : ModPlayer //QoL for the world
@@ -189,7 +184,71 @@ namespace StormQoL
         public override void PostUpdateEquips() //Updates every frame
         {
 
+        }
+    }
+    public class VanillaTooltips : GlobalItem
+    {
+        public override bool InstancePerEntity => true;
 
+        public override void UpdateInventory(Item item, Player player)
+        {
+
+        }
+        public override void HoldItem(Item item, Player player)
+        {
+            base.HoldItem(item, player);
+        }
+        public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
+        {
+            Player player = Main.LocalPlayer;
+            if (GetInstance<Configurations>().superCrit)
+            {
+                foreach (TooltipLine line in tooltips)
+                {
+                    if (item.CountsAsClass(DamageClass.Generic))
+                    {
+                        if (line.Mod == "Terraria" && line.Name == "CritChance")
+                        {
+                            line.Text = line.Text + "\n" + (Math.Min(100, Math.Max(0, (item.crit + (int)player.GetCritChance(DamageClass.Generic) - 100)))) + "[c/DBBD00:% super crit chance]";
+                        }
+                    }
+                    if (item.CountsAsClass(DamageClass.Melee))
+                    {
+                        if (line.Mod == "Terraria" && line.Name == "CritChance")
+                        {
+                            line.Text = line.Text + "\n" + (Math.Min(100, Math.Max(0, (item.crit + (int)player.GetCritChance(DamageClass.Generic) + (int)player.GetCritChance(DamageClass.Melee) + (int)player.GetCritChance(DamageClass.MeleeNoSpeed) - 100)))) + "[c/DBBD00:% super crit chance]";
+                        }
+                    }
+                    if (item.CountsAsClass(DamageClass.Ranged) && item.ammo == 0)
+                    {
+                        if (line.Mod == "Terraria" && line.Name == "CritChance")
+                        {
+                            line.Text = line.Text + "\n" + (Math.Min(100, Math.Max(0, (item.crit + (int)player.GetCritChance(DamageClass.Generic) + (int)player.GetCritChance(DamageClass.Ranged) - 100)))) + "[c/DBBD00:% super crit chance]";
+                        }
+                    }
+                    if (item.CountsAsClass(DamageClass.Magic))
+                    {
+                        if (line.Mod == "Terraria" && line.Name == "CritChance")
+                        {
+                            line.Text = line.Text + "\n" + (Math.Min(100, Math.Max(0, (item.crit + (int)player.GetCritChance(DamageClass.Generic) + (int)player.GetCritChance(DamageClass.Magic) - 100)))) + "[c/DBBD00:% super crit chance]";
+                        }
+                    }
+                    if (item.CountsAsClass(DamageClass.Summon))
+                    {
+                        if (line.Mod == "Terraria" && line.Name == "CritChance")
+                        {
+                            line.Text = line.Text + "\n" + (Math.Min(100, Math.Max(0, (item.crit + (int)player.GetCritChance(DamageClass.Generic) + (int)player.GetCritChance(DamageClass.Summon) - 100)))) + "[c/DBBD00:% super crit chance]";
+                        }
+                    }
+                    if (item.CountsAsClass(DamageClass.Throwing))
+                    {
+                        if (line.Mod == "Terraria" && line.Name == "CritChance")
+                        {
+                            line.Text = line.Text + "\n" + (Math.Min(100, Math.Max(0, (item.crit + (int)player.GetCritChance(DamageClass.Generic) + (int)player.GetCritChance(DamageClass.Throwing) - 100)))) + "[c/DBBD00:% super crit chance]";
+                        }
+                    }
+                }
+            }
         }
     }
     public class ConfigNPCeffects : GlobalNPC
@@ -200,7 +259,81 @@ namespace StormQoL
         {
 
         }
-        
+        int classlesspain;
+        int meleepain;
+        int rangedpain;
+        int magicpain;
+        int summonpain;
+        int throwingpain;
+
+        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+            var player = Main.player[projectile.owner];
+            if (GetInstance<Configurations>().superCrit)
+            {
+                classlesspain = Math.Min(100, Math.Max(0, player.HeldItem.crit + (int)player.GetCritChance(DamageClass.Generic) - 100));
+                meleepain = Math.Min(100, Math.Max(0, player.HeldItem.crit + (int)player.GetCritChance(DamageClass.Generic) + (int)player.GetCritChance(DamageClass.Melee) + (int)player.GetCritChance(DamageClass.MeleeNoSpeed) - 100));
+                rangedpain = Math.Min(100, Math.Max(0, player.HeldItem.crit + (int)player.GetCritChance(DamageClass.Generic) + (int)player.GetCritChance(DamageClass.Ranged) - 100));
+                magicpain = Math.Min(100, Math.Max(0, player.HeldItem.crit + (int)player.GetCritChance(DamageClass.Generic) + (int)player.GetCritChance(DamageClass.Magic) - 100));
+                summonpain = Math.Min(100, Math.Max(0, player.HeldItem.crit + (int)player.GetCritChance(DamageClass.Generic) + (int)player.GetCritChance(DamageClass.Summon) - 100));
+                throwingpain = Math.Min(100, Math.Max(0, player.HeldItem.crit + (int)player.GetCritChance(DamageClass.Generic) + (int)player.GetCritChance(DamageClass.Throwing) - 100));
+
+                {
+                    if ((Main.rand.Next(100) < (classlesspain) && player.HeldItem.CountsAsClass(DamageClass.Generic)) ||
+                        (Main.rand.Next(100) < (meleepain) && (player.HeldItem.CountsAsClass(DamageClass.Melee) || player.HeldItem.CountsAsClass(DamageClass.MeleeNoSpeed))) ||
+                        (Main.rand.Next(100) < (rangedpain) && player.HeldItem.CountsAsClass(DamageClass.Ranged)) ||
+                        (Main.rand.Next(100) < (magicpain) && player.HeldItem.CountsAsClass(DamageClass.Magic)) ||
+                        (Main.rand.Next(100) < (summonpain) && player.HeldItem.CountsAsClass(DamageClass.Summon)) ||
+                        (Main.rand.Next(100) < (throwingpain) && player.HeldItem.CountsAsClass(DamageClass.Throwing))
+                        )
+                    {
+                        damage = (int)(damage * 1.5f);
+
+                        CombatText.NewText(new Rectangle((int)npc.Center.X, (int)npc.Center.Y, 12, 4), Color.Yellow, "Super Crit!", true);
+                        CombatText.UpdateCombatText();
+
+                        SoundEngine.PlaySound(SoundID.NPCDeath56 with { Volume = 0.2f, Pitch = 1f }, npc.Center);
+                        for (int i = 0; i < 30; i++)
+                        {
+                            Dust dust;
+                            // You need to set position depending on what you are doing. You may need to subtract width/2 and height/2 as well to center the spawn rectangle.
+                            Vector2 position = npc.position;
+                            dust = Main.dust[Terraria.Dust.NewDust(position, npc.width, npc.height, 169, 0f, 0f, 0, new Color(255, 255, 255), 1f)];
+                            dust.noGravity = true;
+                        }
+                    }
+                }
+                //Main.NewText("Classless " + (classlesspain) + " Melee " + (meleepain) + " Ranged " + (rangedpain) + " Magic " + (magicpain) + " Summon " + (summonpain) + " Throwing " + (throwingpain), 0, 204, 170);
+            }
+            base.ModifyHitByProjectile(npc, projectile, ref damage, ref knockback, ref crit, ref hitDirection);
+        }
+        public override void ModifyHitByItem(NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit)
+        {
+            if (GetInstance<Configurations>().noDamageSpread)
+            {
+                meleepain = Math.Min(100, Math.Max(0, player.HeldItem.crit + (int)player.GetCritChance(DamageClass.Generic) + (int)player.GetCritChance(DamageClass.Melee) + (int)player.GetCritChance(DamageClass.MeleeNoSpeed) - 100));
+                if (Main.rand.Next(100) < (meleepain) && (player.HeldItem.CountsAsClass(DamageClass.Melee) || player.HeldItem.CountsAsClass(DamageClass.MeleeNoSpeed)))
+                {
+                    damage = (int)(damage * 1.5f);
+
+                    CombatText.NewText(new Rectangle((int)npc.Center.X, (int)npc.Center.Y, 12, 4), Color.Yellow, "Super Crit!", true);
+                    CombatText.UpdateCombatText();
+
+                    SoundEngine.PlaySound(SoundID.NPCDeath56 with { Volume = 0.2f, Pitch = 1f }, npc.Center);
+                    for (int i = 0; i < 30; i++)
+                    {
+                        Dust dust;
+                        // You need to set position depending on what you are doing. You may need to subtract width/2 and height/2 as well to center the spawn rectangle.
+                        Vector2 position = npc.position;
+                        dust = Main.dust[Terraria.Dust.NewDust(position, npc.width, npc.height, 169, 0f, 0f, 0, new Color(255, 255, 255), 1f)];
+                        dust.noGravity = true;
+                    }
+                }
+                //Main.NewText("Melee " + (meleepain), 0, 204, 170);
+            }
+            base.ModifyHitByItem(npc, player, item, ref damage, ref knockback, ref crit);
+        }
+
     }
     public class Configworldeffects : ModSystem //QoL for the world
     {
