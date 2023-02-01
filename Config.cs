@@ -279,12 +279,12 @@ namespace StormQoL
                 throwingpain = Math.Min(100, Math.Max(0, player.HeldItem.crit + (int)player.GetCritChance(DamageClass.Generic) + (int)player.GetCritChance(DamageClass.Throwing) - 100));
 
                 {
-                    if ((Main.rand.Next(100) < (classlesspain) && player.HeldItem.CountsAsClass(DamageClass.Generic)) ||
-                        (Main.rand.Next(100) < (meleepain) && (player.HeldItem.CountsAsClass(DamageClass.Melee) || player.HeldItem.CountsAsClass(DamageClass.MeleeNoSpeed))) ||
-                        (Main.rand.Next(100) < (rangedpain) && player.HeldItem.CountsAsClass(DamageClass.Ranged)) ||
-                        (Main.rand.Next(100) < (magicpain) && player.HeldItem.CountsAsClass(DamageClass.Magic)) ||
-                        (Main.rand.Next(100) < (summonpain) && player.HeldItem.CountsAsClass(DamageClass.Summon)) ||
-                        (Main.rand.Next(100) < (throwingpain) && player.HeldItem.CountsAsClass(DamageClass.Throwing))
+                    if (((Main.rand.Next(100) < (classlesspain) && player.HeldItem.CountsAsClass(DamageClass.Generic) && projectile.CountsAsClass(DamageClass.Generic)) ||
+                        (Main.rand.Next(100) < (meleepain) && (player.HeldItem.CountsAsClass(DamageClass.Melee) || player.HeldItem.CountsAsClass(DamageClass.MeleeNoSpeed)) && (projectile.CountsAsClass(DamageClass.Melee) || projectile.CountsAsClass(DamageClass.MeleeNoSpeed))) ||
+                        (Main.rand.Next(100) < (rangedpain) && player.HeldItem.CountsAsClass(DamageClass.Ranged) && projectile.CountsAsClass(DamageClass.Ranged)) ||
+                        (Main.rand.Next(100) < (magicpain) && player.HeldItem.CountsAsClass(DamageClass.Magic) && projectile.CountsAsClass(DamageClass.Magic)) ||
+                        (Main.rand.Next(100) < (summonpain) && player.HeldItem.CountsAsClass(DamageClass.Summon) && projectile.CountsAsClass(DamageClass.Summon)) ||
+                        (Main.rand.Next(100) < (throwingpain) && player.HeldItem.CountsAsClass(DamageClass.Throwing) && projectile.CountsAsClass(DamageClass.Throwing))) && crit
                         )
                     {
                         damage = (int)(damage * 1.5f);
@@ -312,7 +312,7 @@ namespace StormQoL
             if (GetInstance<Configurations>().noDamageSpread)
             {
                 meleepain = Math.Min(100, Math.Max(0, player.HeldItem.crit + (int)player.GetCritChance(DamageClass.Generic) + (int)player.GetCritChance(DamageClass.Melee) + (int)player.GetCritChance(DamageClass.MeleeNoSpeed) - 100));
-                if (Main.rand.Next(100) < (meleepain) && (player.HeldItem.CountsAsClass(DamageClass.Melee) || player.HeldItem.CountsAsClass(DamageClass.MeleeNoSpeed)))
+                if ((Main.rand.Next(100) < (meleepain) && (player.HeldItem.CountsAsClass(DamageClass.Melee) || player.HeldItem.CountsAsClass(DamageClass.MeleeNoSpeed))) && crit)
                 {
                     damage = (int)(damage * 1.5f);
 
