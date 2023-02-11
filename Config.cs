@@ -287,19 +287,22 @@ namespace StormQoL
                         (Main.rand.Next(100) < (throwingpain) && player.HeldItem.CountsAsClass(DamageClass.Throwing) && projectile.CountsAsClass(DamageClass.Throwing))) && crit
                         )
                     {
-                        damage = (int)(damage * 1.5f);
-
-                        CombatText.NewText(new Rectangle((int)npc.Center.X, (int)npc.Center.Y, 12, 4), Color.Yellow, "Super Crit!", true);
-                        CombatText.UpdateCombatText();
-
-                        SoundEngine.PlaySound(SoundID.NPCDeath56 with { Volume = 0.2f, Pitch = 1f }, npc.Center);
-                        for (int i = 0; i < 30; i++)
+                        if (npc.lifeMax > 5)
                         {
-                            Dust dust;
-                            // You need to set position depending on what you are doing. You may need to subtract width/2 and height/2 as well to center the spawn rectangle.
-                            Vector2 position = npc.position;
-                            dust = Main.dust[Terraria.Dust.NewDust(position, npc.width, npc.height, 169, 0f, 0f, 0, new Color(255, 255, 255), 1f)];
-                            dust.noGravity = true;
+                            damage = (int)(damage * 1.5f);
+
+                            CombatText.NewText(new Rectangle((int)npc.Center.X, (int)npc.Center.Y, 12, 4), Color.Yellow, "Super Crit!", true);
+                            CombatText.UpdateCombatText();
+
+                            SoundEngine.PlaySound(SoundID.NPCDeath56 with { Volume = 0.2f, Pitch = 1f }, npc.Center);
+                            for (int i = 0; i < 30; i++)
+                            {
+                                Dust dust;
+                                // You need to set position depending on what you are doing. You may need to subtract width/2 and height/2 as well to center the spawn rectangle.
+                                Vector2 position = npc.position;
+                                dust = Main.dust[Terraria.Dust.NewDust(position, npc.width, npc.height, 169, 0f, 0f, 0, new Color(255, 255, 255), 1f)];
+                                dust.noGravity = true;
+                            }
                         }
                     }
                 }
@@ -314,19 +317,22 @@ namespace StormQoL
                 meleepain = Math.Min(100, Math.Max(0, player.HeldItem.crit + (int)player.GetCritChance(DamageClass.Generic) + (int)player.GetCritChance(DamageClass.Melee) + (int)player.GetCritChance(DamageClass.MeleeNoSpeed) - 100));
                 if ((Main.rand.Next(100) < (meleepain) && (player.HeldItem.CountsAsClass(DamageClass.Melee) || player.HeldItem.CountsAsClass(DamageClass.MeleeNoSpeed))) && crit)
                 {
-                    damage = (int)(damage * 1.5f);
-
-                    CombatText.NewText(new Rectangle((int)npc.Center.X, (int)npc.Center.Y, 12, 4), Color.Yellow, "Super Crit!", true);
-                    CombatText.UpdateCombatText();
-
-                    SoundEngine.PlaySound(SoundID.NPCDeath56 with { Volume = 0.2f, Pitch = 1f }, npc.Center);
-                    for (int i = 0; i < 30; i++)
+                    if (npc.lifeMax > 5 && npc.CanBeChasedBy())
                     {
-                        Dust dust;
-                        // You need to set position depending on what you are doing. You may need to subtract width/2 and height/2 as well to center the spawn rectangle.
-                        Vector2 position = npc.position;
-                        dust = Main.dust[Terraria.Dust.NewDust(position, npc.width, npc.height, 169, 0f, 0f, 0, new Color(255, 255, 255), 1f)];
-                        dust.noGravity = true;
+                        damage = (int)(damage * 1.5f);
+
+                        CombatText.NewText(new Rectangle((int)npc.Center.X, (int)npc.Center.Y, 12, 4), Color.Yellow, "Super Crit!", true);
+                        CombatText.UpdateCombatText();
+
+                        SoundEngine.PlaySound(SoundID.NPCDeath56 with { Volume = 0.2f, Pitch = 1f }, npc.Center);
+                        for (int i = 0; i < 30; i++)
+                        {
+                            Dust dust;
+                            // You need to set position depending on what you are doing. You may need to subtract width/2 and height/2 as well to center the spawn rectangle.
+                            Vector2 position = npc.position;
+                            dust = Main.dust[Terraria.Dust.NewDust(position, npc.width, npc.height, 169, 0f, 0f, 0, new Color(255, 255, 255), 1f)];
+                            dust.noGravity = true;
+                        }
                     }
                 }
                 //Main.NewText("Melee " + (meleepain), 0, 204, 170);
