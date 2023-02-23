@@ -7,6 +7,7 @@ This mod allows you to:
 -Allow Axes and Hammers to benefit from Mining Speed buffs.
 -Allows Mechancial tools to benefit from mining speed buffs (Drills, Chainsaws, and Jackhammers)
 -Disable dev items dropping from treasure bags
--Prevent your own explosives from dealing self-damage
+-Prevent your own explosives from dealing self-damage (Doesn't work with exploding bullets for some reason)
+-Make falling stars fall as items instead of projectiles
 
 Also check out my decently sized content mod, Storm's Additions Mod: https://steamcommunity.com/workshop/filedetails/?id=2747380524

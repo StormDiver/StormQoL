@@ -21,6 +21,7 @@ using Terraria.Audio;
 
 using static Terraria.ModLoader.ModContent;
 using Terraria.ModLoader.IO;
+using Terraria.DataStructures;
 
 namespace StormQoL
 {
@@ -84,10 +85,15 @@ namespace StormQoL
 
 
         [Label("Prevent your own explosives from harming you")]
-        [Tooltip("This will prevent any explosive item you launch/throw from inflicting self damage (requires reload)")]
+        [Tooltip("This will prevent any explosive item you launch/throw from inflicting self damage (Doesn't work with explosive Bullets) (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
         public bool NoBoomBoom { get; set; }
+
+        [Label("Falling Stars fall as items instead of projectiles")]
+        [Tooltip("This will turn all falling stars into the item as soon as they spawn instead of being a damaging projectile, useful if you want an uninterrupted boss fight")]
+        [DefaultValue(false)]
+        public bool NoStar4U { get; set; }
     }
     public class StormQoL : Mod
     {
@@ -111,16 +117,31 @@ namespace StormQoL
     {
         public override void SetDefaults(Projectile projectile)
         {
-      
             if (GetInstance<Configurations>().NoBoomBoom)
             {
                 if (projectile.friendly)
                 {
                     ProjectileID.Sets.RocketsSkipDamageForPlayers[projectile.type] = true;
-                }             
+                }
+                if (projectile.type == ProjectileID.ExplosiveBullet)
+                {
+                    projectile.usesLocalNPCImmunity = true;
+                    projectile.localNPCHitCooldown = 10;
+                }
             }
             base.SetDefaults(projectile);
+        }
 
+        public override void AI(Projectile projectile)
+        {
+            if (GetInstance<Configurations>().NoStar4U)
+            {
+                if (projectile.type == ProjectileID.FallingStar)
+                {
+                    projectile.Kill();
+                    //Main.NewText("Lmfao get rekt star lmao", 255, 127, 127);
+                }
+            }
         }
     }
     public class Itemchanges : GlobalItem
@@ -184,6 +205,18 @@ namespace StormQoL
         public override void PostUpdateEquips() //Updates every frame
         {
 
+        }
+    
+        public override bool CanBeHitByProjectile(Projectile proj)
+        {
+            if (GetInstance<Configurations>().NoBoomBoom)
+            {
+                if (proj.type == ProjectileID.ExplosiveBullet)
+                {
+                    return false;
+                }
+            }
+            return base.CanBeHitByProjectile(proj);
         }
     }
     public class VanillaTooltips : GlobalItem
@@ -265,7 +298,7 @@ namespace StormQoL
         int magicpain;
         int summonpain;
         int throwingpain;
-
+    
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
             var player = Main.player[projectile.owner];
