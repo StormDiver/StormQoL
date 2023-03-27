@@ -17,8 +17,7 @@ using Terraria.ModLoader.Config.UI;
 using Terraria.UI;
 using StormQoL;
 using Terraria.Audio;
-
-
+using Terraria.GameContent.ItemDropRules;
 using static Terraria.ModLoader.ModContent;
 using Terraria.ModLoader.IO;
 using Terraria.DataStructures;
@@ -77,12 +76,23 @@ namespace StormQoL
 
         [Header("Misc")]
 
+        [Label("Make all accessories placeable in social slots")]
+        [Tooltip("This will allow you to plac any accessory into the social vanity slots")]
+        [ReloadRequired] //Yes
+        [DefaultValue(false)]
+        public bool VanityPower { get; set; }
+
+        [Label("Prevent prehardmode enemy stats from scaling in expert hardmode")]
+        [Tooltip("This will prevent all prehardmode enemies from having their stats scaled in expert mode during hardmode (requires reload)")]
+        [ReloadRequired] //Yes
+        [DefaultValue(false)]
+        public bool NoStronk { get; set; }
+
         [Label("Prevent Treasure Bags from droppping dev items")]
         [Tooltip("If you have a lot of bags to open and don't want your inventory cluttered by dev items (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
         public bool NoInventoryClutter { get; set; }
-
 
         [Label("Prevent your own explosives from harming you")]
         [Tooltip("This will prevent any explosive item you launch/throw from inflicting self damage (Doesn't work with explosive Bullets) (requires reload)")]
@@ -94,6 +104,14 @@ namespace StormQoL
         [Tooltip("This will turn all falling stars into the item as soon as they spawn instead of being a damaging projectile, useful if you want an uninterrupted boss fight")]
         [DefaultValue(false)]
         public bool NoStar4U { get; set; }
+
+
+        [Label("Make Blazing Wheels and Spike balls killable")]
+        [Tooltip("This will allow you to deal damage and kill Blazing Wheels and Dungeon Spike balls, useful if one spawned in an awkward place")]
+        [DefaultValue(false)]
+        public bool RIPdungeon { get; set; }
+
+       
     }
     public class StormQoL : Mod
     {
@@ -114,7 +132,7 @@ namespace StormQoL
 
     }
     public class Projchanges : GlobalProjectile
-    {
+    {     
         public override void SetDefaults(Projectile projectile)
         {
             if (GetInstance<Configurations>().NoBoomBoom)
@@ -159,7 +177,14 @@ namespace StormQoL
                     ItemID.Sets.PreHardmodeLikeBossBag[item.type] = true;
                 }
             }
-            
+            if (GetInstance<Configurations>().VanityPower)
+            {
+                if (item.accessory)
+                {
+                    item.canBePlacedInVanityRegardlessOfConditions = true;
+                }
+            }
+
             //Mech tools
             if (GetInstance<Configurations>().FastDrill4U)
             {
@@ -287,10 +312,59 @@ namespace StormQoL
     public class ConfigNPCeffects : GlobalNPC
     {
         public override bool InstancePerEntity => true;
-
-        public override void SetDefaults(NPC npc)
+        public override void SetStaticDefaults()
         {
 
+        }
+        public override void SetDefaults(NPC npc)
+        {
+            if (GetInstance<Configurations>().NoStronk)
+            {
+                NPCID.Sets.DontDoHardmodeScaling[npc.type] = true;
+            }
+        }
+        public override void AI(NPC npc)
+        {
+            if (GetInstance<Configurations>().RIPdungeon)
+            {
+                if (npc.type is NPCID.SpikeBall or NPCID.BlazingWheel)
+                {
+                    npc.dontTakeDamage = false;
+                }
+            }
+        }
+        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
+        {
+            if (GetInstance<Configurations>().RIPdungeon)
+            {
+                if (npc.type is NPCID.SpikeBall)
+                {
+                    npcLoot.Add(ItemDropRule.Common(ItemID.Spike, 1, 5, 10));
+                }
+                if (npc.type is NPCID.BlazingWheel)
+                {
+                    npcLoot.Add(ItemDropRule.Common(ItemID.LivingFireBlock, 1, 10, 20));
+                }
+            }
+        }
+        public override void HitEffect(NPC npc, int hitDirection, double damage)
+        {
+            if (GetInstance<Configurations>().RIPdungeon)
+            {
+                if (npc.life <= 0)
+                {
+                    if (npc.type is NPCID.SpikeBall or NPCID.BlazingWheel)
+                    {
+                        int proj = Projectile.NewProjectile(null, new Vector2(npc.Center.X, npc.Center.Y), new Vector2(0, 0), ProjectileID.SolarWhipSwordExplosion, 0, 0, Main.myPlayer);
+                        Main.projectile[proj].damage = 0;
+                        Main.projectile[proj].tileCollide = false;
+                    }
+                }
+            }
+        }
+        public override void OnKill(NPC npc)
+        {
+            
         }
         int classlesspain;
         int meleepain;
