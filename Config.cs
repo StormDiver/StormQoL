@@ -452,6 +452,9 @@ namespace StormQoL
                 if ((item.pick >= 1 || item.axe >= 1 || item.hammer >= 1) && item.channel) // Should detect the item as a mech tool like this unless the modder did it wrong
                 {
                     item.useTime = basedrillspeed * drillspeed2 / 100; //Multiple the base use time by the player's pickspeed divided by 100
+
+                    if (item.useTime == 0)
+                        item.useTime = 1;
                 }
             }
             if (GetInstance<Configurations>().FastChop4U)
@@ -459,6 +462,9 @@ namespace StormQoL
                 if ((item.axe >= 1 || item.hammer >= 1) && !item.channel && item.pick == 0) // Should detect the item as a hammmer/axe like this unless the modder did it wrong
                 {
                     item.useTime = basedrillspeed * drillspeed2 / 100; //Multiple the base use time by the player's pickspeed divided by 100
+
+                     if (item.useTime == 0)
+                        item.useTime = 1;
                 }
             }          
         }
