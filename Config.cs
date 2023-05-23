@@ -34,7 +34,7 @@ namespace StormQoL
         [Header("Celestial Event Shield")]
 
         [Label("Pillar shield kill count")]
-        [Tooltip("How many enemies will have to be defeated for the shield to be destroyed in Classic difficulty")]
+        [Tooltip("How many enemies will have to be defeated for the shield to be destroyed")]
         [Range(10, 100)]
         [Slider]
         [DefaultValue(100)]
@@ -57,6 +57,18 @@ namespace StormQoL
         public bool superCrit { get; set; }
 
         [Header("Player Tweaks")]
+
+        [Label("Respawn timer (seconds)")]
+        [Tooltip("Allows you to choose how long the cooldown for respawning is")]
+        [Range(0, 30)]
+        [Slider]
+        [DefaultValue(15)]
+        public int Respwned { get; set; }
+
+        [Label("Respawn with full health")]
+        [Tooltip("Makes you respawn with a full bar of health")]
+        [DefaultValue(false)]
+        public bool TheHealth { get; set; }
 
         [Label("Prevent your own explosives from harming you")]
         [Tooltip("This will prevent any explosive item you launch/throw from inflicting self-damage (Doesn't work with explosive Bullets) (requires reload)")]
@@ -106,6 +118,12 @@ namespace StormQoL
         public bool NoSink { get; set; }
 
         [Header("Misc")]
+
+        [Label("Remove NPC happiness")]
+        [Tooltip("This will completely remove the happiness system from all NPCs, also makes NPCs always sell the pylon for their favourite biome (requires reload)")]
+        [ReloadRequired] //Yes
+        [DefaultValue(false)]
+        public bool noHappy4U { get; set; }
 
         [Label("Unlock full bestiary entries with just 1 kill")]
         [Tooltip("This will make it so killing a single enemy unlocks its entire bestiary entry (requires reload)")]
@@ -471,6 +489,7 @@ namespace StormQoL
     }
     public class Configplayereffects : ModPlayer //QoL for the world
     {
+        
         public override void PostUpdateEquips() //Updates every frame
         {
             if (GetInstance<Configurations>().NoSink)
@@ -496,6 +515,20 @@ namespace StormQoL
                 }
             }
             return base.CanBeHitByProjectile(proj);
+        }
+        public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
+        {
+            Player.respawnTimer = (GetInstance<Configurations>().Respwned * 60); //Change respawn timer
+
+            base.Kill(damage, hitDirection, pvp, damageSource);
+        }
+        public override void OnRespawn()
+        {
+            if (GetInstance<Configurations>().TheHealth)
+            {
+                Player.statLife = Player.statLifeMax2;
+            }
+            base.OnRespawn();
         }
     }
     public class VanillaTooltips : GlobalItem
@@ -563,18 +596,23 @@ namespace StormQoL
             }
         }
     }
+    
     public class ConfigNPCeffects : GlobalNPC
     {
         public override bool InstancePerEntity => true;
         public override void SetStaticDefaults()
         {
-
         }
         public override void SetDefaults(NPC npc)
         {
+
             if (GetInstance<Configurations>().NoStronk)
             {
                 NPCID.Sets.DontDoHardmodeScaling[npc.type] = true;
+            }
+            if (GetInstance<Configurations>().noHappy4U)
+            {
+                NPCID.Sets.NoTownNPCHappiness[npc.type] = true;
             }
         }
         public override void SetBestiary(NPC npc, BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -609,6 +647,47 @@ namespace StormQoL
                 }
             }
         }
+
+        public override void ModifyShop(NPCShop shop)
+        {
+            base.ModifyShop(shop);
+            if (GetInstance<Configurations>().noHappy4U)
+            {
+                if (shop.NpcType == NPCID.BestiaryGirl || shop.NpcType == NPCID.Golfer || shop.NpcType == NPCID.Merchant) //Forest
+                {
+                    shop.Add(ItemID.TeleportationPylonPurity);
+                }
+                if (shop.NpcType == NPCID.Mechanic || shop.NpcType == NPCID.Cyborg || shop.NpcType == NPCID.SantaClaus) //Snow
+                {
+                    shop.Add(ItemID.TeleportationPylonSnow);
+                }
+                if (shop.NpcType == NPCID.ArmsDealer || shop.NpcType == NPCID.Steampunker || shop.NpcType == NPCID.DyeTrader) //Desert
+                {
+                    shop.Add(ItemID.TeleportationPylonDesert);
+                }
+                if (shop.NpcType == NPCID.GoblinTinkerer || shop.NpcType == NPCID.Clothier || shop.NpcType == NPCID.Demolitionist) //Cavern
+                {
+                    shop.Add(ItemID.TeleportationPylonUnderground);
+                }
+                if (shop.NpcType == NPCID.Stylist || shop.NpcType == NPCID.Pirate) //Ocean
+                {
+                    shop.Add(ItemID.TeleportationPylonOcean);
+                }
+                if (shop.NpcType == NPCID.Dryad || shop.NpcType == NPCID.Painter || shop.NpcType == NPCID.WitchDoctor) //Jungle
+                {
+                    shop.Add(ItemID.TeleportationPylonJungle);
+                }
+                if (shop.NpcType == NPCID.PartyGirl || shop.NpcType == NPCID.Wizard || shop.NpcType == NPCID.Princess) //Hallow
+                {
+                    shop.Add(ItemID.TeleportationPylonHallow, Condition.Hardmode);
+                }
+                if (shop.NpcType == NPCID.Truffle) //Mushroom
+                {
+                    shop.Add(ItemID.TeleportationPylonMushroom);
+                }
+            }
+        }
+
         public override void HitEffect(NPC npc, NPC.HitInfo hit)
         {
             if (GetInstance<Configurations>().RIPdungeon)
