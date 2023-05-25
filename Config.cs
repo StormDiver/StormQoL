@@ -31,10 +31,10 @@ namespace StormQoL
     {
         public override ConfigScope Mode => ConfigScope.ServerSide;
 
-        [Header("Celestial Event Shield")]
+        [Header("CelestialEventShield")]
 
-        [Label("Pillar shield kill count")]
-        [Tooltip("How many enemies will have to be defeated for the shield to be destroyed")]
+        //[Label("Pillar shield kill count")]
+        //[Tooltip("How many enemies will have to be defeated for the shield to be destroyed")]
         [Range(10, 100)]
         [Slider]
         [DefaultValue(100)]
@@ -42,114 +42,115 @@ namespace StormQoL
         public int shieldHealthNormal;
 
         [Header("Damage")]
-        [Label("Set Custom Damage variance")]
-        [Tooltip("Allows you to set a custom damage variance percentage for all damage dealt and taken (Requires reload)")]
+
+        //[Label("Set Custom Damage variance")]
+        //[Tooltip("Allows you to set a custom damage variance percentage for all damage dealt and taken (Requires reload)")]
         [ReloadRequired] //Yes
         [Range(0, 100)]
         [Slider]
         [DefaultValue(15)]
         public int DamageSpread { get; set; }
 
-        [Label("Enable Super Crits")]
-        [Tooltip("Every percentage your weapons crit chance is above 100% is the chance for a super crit that deals x3 damage (Requires reload)")]
+        //[Label("Enable Super Crits")]
+        //[Tooltip("Every percentage your weapons crit chance is above 100% is the chance for a super crit that deals x3 damage (Requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
         public bool superCrit { get; set; }
 
-        [Header("Player Tweaks")]
+        [Header("PlayerTweaks")]
 
-        [Label("Respawn timer (seconds)")]
-        [Tooltip("Allows you to choose how long the cooldown for respawning is")]
+        //[Label("Respawn timer (seconds)")]
+        //[Tooltip("Allows you to choose how long the cooldown for respawning is")]
         [Range(0, 30)]
         [Slider]
         [DefaultValue(15)]
         public int Respwned { get; set; }
 
-        [Label("Respawn with full health")]
-        [Tooltip("Makes you respawn with a full bar of health")]
+        //[Label("Respawn with full health")]
+        //[Tooltip("Makes you respawn with a full bar of health")]
         [DefaultValue(false)]
         public bool TheHealth { get; set; }
 
-        [Label("Prevent your own explosives from harming you")]
-        [Tooltip("This will prevent any explosive item you launch/throw from inflicting self-damage (Doesn't work with explosive Bullets) (requires reload)")]
+        //[Label("Prevent your own explosives from harming you")]
+        //[Tooltip("This will prevent any explosive item you launch/throw from inflicting self-damage (Doesn't work with explosive Bullets) (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
         public bool NoBoomBoom { get; set; }
 
-        [Label("Prevent certain generated traps from harming you.")]
-        [Tooltip("Prevents traps such as dart traps, boulders, and explosives from harming you, does not affect lihzarhd traps or 'No Traps' worlds")]
+        //[Label("Prevent certain generated traps from harming you.")]
+        //[Tooltip("Prevents traps such as dart traps, boulders, and explosives from harming you, does not affect lihzarhd traps or 'No Traps' worlds")]
         [DefaultValue(false)]
         public bool NoTraps { get; set; }
 
-        [Label("Don't drop a tombstone on death")]
-        [Tooltip("Stops you from dropping a tombstone on death, great for preventing unwanted graveyards or just grave clutter.")]
+        //[Label("Don't drop a tombstone on death")]
+        //[Tooltip("Stops you from dropping a tombstone on death, great for preventing unwanted graveyards or just grave clutter.")]
         [DefaultValue(false)]
         public bool FckGraves { get; set; }
 
-        [Label("Prevent being chilled in expert snow biome water")]
-        [Tooltip("Prevents you from being inflicted with the chilled debuff while in water in an expert snow biome.")]
+        //[Label("Prevent being chilled in expert snow biome water")]
+        //[Tooltip("Prevents you from being inflicted with the chilled debuff while in water in an expert snow biome.")]
         [DefaultValue(false)]
         public bool NoChill { get; set; }
 
-        [Header("Mining Speed tweaks")]
+        [Header("MiningSpeedTweaks")]
 
-        [Label("Allow Axes and Hammers to benefit from mining buffs")]
-        [Tooltip("Allows Axes and Hammers to mine faster if you have any mining buffs equipped, works with modded tools too (requires reload)")]
+        //[Label("Allow Axes and Hammers to benefit from mining buffs")]
+        //[Tooltip("Allows Axes and Hammers to mine faster if you have any mining buffs equipped, works with modded tools too (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
         public bool FastChop4U { get; set; }
 
-        [Label("Allow mechanical tools to benefit from mining buffs")]
-        [Tooltip("Allows mechanical tools to mine faster if you have any mining buffs equipped, works with modded tools too (requires reload)")]
+        //[Label("Allow mechanical tools to benefit from mining buffs")]
+        //[Tooltip("Allows mechanical tools to mine faster if you have any mining buffs equipped, works with modded tools too (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
         public bool FastDrill4U { get; set; }
         [Header("Shimmer")]
 
-        [Label("Allows boss and event boss drops to be shimmer-able")]
-        [Tooltip("This will allow most weapons and armour dropped from bosses/minibosses to be shimmered into another drop from the same boss (requires reload)")]
+        //[Label("Allows boss and event boss drops to be shimmer-able")]
+        //[Tooltip("This will allow most weapons and armour dropped from bosses/minibosses to be shimmered into another drop from the same boss (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
         public bool RIPBossRNG { get; set; }
 
-        [Label("Grant total immunity to sinking in shimmer")]
-        [Tooltip("This will prevent you from falling through the floor if you land in shimmer, it even prevents it if you accidentally hold down while wearing the cloak.")]
+        //[Label("Grant total immunity to sinking in shimmer")]
+        //[Tooltip("This will prevent you from falling through the floor if you land in shimmer, it even prevents it if you accidentally hold down while wearing the cloak.")]
         [DefaultValue(false)]
         public bool NoSink { get; set; }
 
-        [Header("Misc")]
+        [Header("MiscTweaks")]
 
-        [Label("Remove NPC happiness")]
-        [Tooltip("This will completely remove the happiness system from all NPCs, also makes NPCs always sell the pylon for their favourite biome (requires reload)")]
+        //[Label("Remove NPC happiness")]
+        //[Tooltip("This will completely remove the happiness system from all NPCs, also makes NPCs always sell the pylon for their favourite biome (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
         public bool noHappy4U { get; set; }
 
-        [Label("Unlock full bestiary entries with just 1 kill")]
-        [Tooltip("This will make it so killing a single enemy unlocks its entire bestiary entry (requires reload)")]
+        //[Label("Unlock full bestiary entries with just 1 kill")]
+        //[Tooltip("This will make it so killing a single enemy unlocks its entire bestiary entry (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
         public bool bestUnlocks { get; set; }
 
-        [Label("Prevent prehardmode enemy stats from scaling in expert hardmode")]
-        [Tooltip("This will prevent all prehardmode enemies from having their stats scaled in expert mode during hardmode (requires reload)")]
+        //[Label("Prevent prehardmode enemy stats from scaling in expert hardmode")]
+        //[Tooltip("This will prevent all prehardmode enemies from having their stats scaled in expert mode during hardmode (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
         public bool NoStronk { get; set; }
 
-        [Label("Prevent Treasure Bags from dropping dev items")]
-        [Tooltip("If you have a lot of bags to open and don't want your inventory cluttered by dev items (requires reload)")]
+        //[Label("Prevent Treasure Bags from dropping dev items")]
+        //[Tooltip("If you have a lot of bags to open and don't want your inventory cluttered by dev items (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
         public bool NoInventoryClutter { get; set; }
 
-        [Label("Falling Stars fall as items instead of projectiles")]
-        [Tooltip("This will turn all falling stars into the item as soon as they spawn instead of being a damaging projectile, useful if you want an uninterrupted boss fight")]
+        //[Label("Falling Stars fall as items instead of projectiles")]
+        //[Tooltip("This will turn all falling stars into the item as soon as they spawn instead of being a damaging projectile, useful if you want an uninterrupted boss fight")]
         [DefaultValue(false)]
         public bool NoStar4U { get; set; }
 
-        [Label("Make Blazing Wheels and Spike balls killable")]
-        [Tooltip("This will allow you to deal damage and kill Blazing Wheels and Dungeon Spike balls, useful if one spawned in an awkward place")]
+        //[Label("Make Blazing Wheels and Spike balls killable")]
+        //[Tooltip("This will allow you to deal damage and kill Blazing Wheels and Dungeon Spike balls, useful if one spawned in an awkward place")]
         [DefaultValue(false)]
         public bool RIPdungeon { get; set; }
 
