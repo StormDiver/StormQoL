@@ -105,6 +105,16 @@ namespace StormQoL
         [ReloadRequired] //Yes
         [DefaultValue(false)]
         public bool FastDrill4U { get; set; }
+
+        //[Label("Choose block placement speed")]
+        //[Tooltip("Allows you to make block placing faster, with 2 speeds (Requires reload)")]
+        [ReloadRequired] //Yes
+        [DrawTicks]
+        [OptionStrings(new string[] { "Default", "Fast", "Insanely Fast" })]
+        [DefaultValue("Default")]
+
+        public string SpeedPlace { get; set; }
+
         [Header("Shimmer")]
 
         //[Label("Allows boss and event boss drops to be shimmer-able")]
@@ -159,8 +169,6 @@ namespace StormQoL
     {
         public override void Load()
         {
-            //!!All credit goes to Kojo's mod called Rho's Playground!!
-            //On.Terraria.Main.DamageVar += (orig, damage, luck) => (int)Math.Round(damage * Main.rand.NextFloat(1, 1)); //No damage variance
             Main.DefaultDamageVariationPercent = GetInstance<Configurations>().DamageSpread;
             base.Load();
         }
@@ -220,7 +228,7 @@ namespace StormQoL
     public class Itemchanges : GlobalItem
     {
         public override bool InstancePerEntity => true;
-
+         
         //Drill speeds
         int basedrillspeed; //base mining speed of drill
         public override void SetDefaults(Item item)
@@ -456,12 +464,19 @@ namespace StormQoL
                     ItemID.Sets.ShimmerTransformToItem[item.type] = ItemID.ShadowFlameHexDoll;
                 if (item.type == ItemID.ShadowFlameHexDoll)
                     ItemID.Sets.ShimmerTransformToItem[item.type] = ItemID.ShadowFlameKnife;
+
+                //Biome Chests
+                if  (item.type == ItemID.VampireKnives)
+                        ItemID.Sets.ShimmerTransformToItem[item.type] = ItemID.ScourgeoftheCorruptor;
+                if (item.type == ItemID.ScourgeoftheCorruptor)
+                    ItemID.Sets.ShimmerTransformToItem[item.type] = ItemID.VampireKnives;
             }
 
             base.SetDefaults(item);
         }
         public override void HoldItem(Item item, Player player)
         {
+            
 
             float drillspeed = player.pickSpeed * 100; //Get the player's pickaxe speed times 100 (done to prevent it rounding to 0 and pick speed is between 0 and 1)
             int drillspeed2 = (int)drillspeed; //Convert float to int
@@ -472,8 +487,9 @@ namespace StormQoL
                 {
                     item.useTime = basedrillspeed * drillspeed2 / 100; //Multiple the base use time by the player's pickspeed divided by 100
 
-                    if (item.useTime == 0)
+                    if (item.useTime == 0) //sadly
                         item.useTime = 1;
+
                 }
             }
             if (GetInstance<Configurations>().FastChop4U)
@@ -485,7 +501,16 @@ namespace StormQoL
                      if (item.useTime == 0)
                         item.useTime = 1;
                 }
-            }          
+            }
+
+            if (GetInstance<Configurations>().SpeedPlace == "Insanely Fast") //Insanely Fast placement
+            {
+                if (item.consumable == true && item.useStyle == ItemUseStyleID.Swing && item.damage <= 0)
+                {
+                    item.useTime = 1;
+                    item.useAnimation = 1;
+                }
+            }
         }
     }
     public class Configplayereffects : ModPlayer //QoL for the world
@@ -493,6 +518,10 @@ namespace StormQoL
         
         public override void PostUpdateEquips() //Updates every frame
         {
+            if (GetInstance<Configurations>().SpeedPlace == "Fast") //Fast placement
+            {
+                Player.tileSpeed = 10f;
+            }
             if (GetInstance<Configurations>().NoSink)
             {
                 Player.buffImmune[BuffID.Shimmer] = true;
@@ -535,7 +564,7 @@ namespace StormQoL
     public class VanillaTooltips : GlobalItem
     {
         public override bool InstancePerEntity => true;
-
+       
         public override void UpdateInventory(Item item, Player player)
         {
 

@@ -8,7 +8,7 @@ Mods: {
 					CelestialEventShield: Celestial Event Shield
 					Damage: Damage
 					PlayerTweaks: Player Tweaks
-					MiningSpeedTweaks: Mining Speed Tweaks
+					MiningSpeedTweaks: Mining/Placement Speed Tweaks
 					Shimmer: Shimmer
 					MiscTweaks: Misc Tweaks
 				}
@@ -66,6 +66,11 @@ Mods: {
 				FastDrill4U: {
 					Label: Allow mechanical tools to benefit from mining buffs
 					Tooltip: Allows mechanical tools to mine faster if you have any mining buffs equipped, works with modded tools too (requires reload)
+				}
+
+				SpeedPlace: {
+					Label: Choose block placement speed
+					Tooltip: Allows you to make block placing faster, with 2 speeds (Requires reload)
 				}
 
 				RIPBossRNG: {
