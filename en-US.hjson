@@ -40,7 +40,11 @@ Mods: {
 
 				NoBoomBoom: {
 					Label: Prevent your own explosives from harming you
-					Tooltip: This will prevent any explosive item you launch/throw from inflicting self-damage (Doesn't work with explosive Bullets) (requires reload)
+					Tooltip:
+						'''
+						This will prevent any explosive item you launch/throw from inflicting self-damage 
+						(Doesn't work with explosive Bullets) (requires reload)
+						'''
 				}
 
 				NoTraps: {
@@ -60,12 +64,30 @@ Mods: {
 
 				FastChop4U: {
 					Label: Allow Axes and Hammers to benefit from mining buffs
-					Tooltip: Allows Axes and Hammers to mine faster if you have any mining buffs equipped, works with modded tools too (requires reload)
+					Tooltip: Allows Axes and Hammers to mine faster if you have any mining buffs equipped (requires reload)
 				}
 
 				FastDrill4U: {
 					Label: Allow mechanical tools to benefit from mining buffs
-					Tooltip: Allows mechanical tools to mine faster if you have any mining buffs equipped, works with modded tools too (requires reload)
+					Tooltip: Allows mechanical tools to mine faster if you have any mining buffs equipped (requires reload)
+				}
+
+				BigBoiDrill: {
+					Label: Enable 3x3 mining for drills and jackhammers
+					Tooltip:
+						'''
+						Allows drills to mine in a 3x3 area when holding right click while mining
+						Also applies for walls with Jackhammers
+						'''
+				}
+
+				HammarTime: {
+					Label: Allows unsafe walls to be broken from the inside
+					Tooltip:
+						'''
+						Allows hammers to break unsafe walls even if they're surrounded by unsafe walls
+						Also makes them break faster when at the edge
+						'''
 				}
 
 				SpeedPlace: {
@@ -80,12 +102,20 @@ Mods: {
 
 				NoSink: {
 					Label: Grant total immunity to sinking in shimmer
-					Tooltip: This will prevent you from falling through the floor if you land in shimmer, it even prevents it if you accidentally hold down while wearing the cloak.
+					Tooltip:
+						'''
+						This will prevent you from falling through the floor if you land in shimmer
+						It even prevents it if you accidentally hold down while wearing the cloak.
+						'''
 				}
 
 				noHappy4U: {
 					Label: Remove NPC happiness
-					Tooltip: This will completely remove the happiness system from all NPCs, also makes NPCs always sell the pylon for their favourite biome (requires reload)
+					Tooltip:
+						'''
+						This will completely remove the happiness system from all NPCs
+						Also makes NPCs always sell the pylon for their favourite biome (requires reload)
+						'''
 				}
 
 				bestUnlocks: {
@@ -105,7 +135,7 @@ Mods: {
 
 				NoStar4U: {
 					Label: Falling Stars fall as items instead of projectiles
-					Tooltip: This will turn all falling stars into the item as soon as they spawn instead of being a damaging projectile, useful if you want an uninterrupted boss fight
+					Tooltip: This will turn all falling stars into the item as soon as they spawn instead of being a damaging projectile
 				}
 
 				RIPdungeon: {

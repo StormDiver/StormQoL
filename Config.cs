@@ -106,6 +106,18 @@ namespace StormQoL
         [DefaultValue(false)]
         public bool FastDrill4U { get; set; }
 
+        //[Label("Enable 3x3 mining for drills")]
+        //[Tooltip("Allows drills to mine in a 3x3 area when holding right click while mining, also applies for walls with Jackhammers)]
+        //[ReloadRequired] //Yes
+        [DefaultValue(false)]
+        public bool BigBoiDrill { get; set; }
+
+        //[Label("Allows unsafe walls to be broken from the inside")]
+        //[Tooltip("Allows hammers to break unsafe walls even if they're surrounded by unsafe walls")]
+        //[ReloadRequired] //Yes
+        [DefaultValue(false)]
+        public bool HammarTime { get; set; }
+
         //[Label("Choose block placement speed")]
         //[Tooltip("Allows you to make block placing faster, with 2 speeds (Requires reload)")]
         [ReloadRequired] //Yes
@@ -474,10 +486,108 @@ namespace StormQoL
 
             base.SetDefaults(item);
         }
+        int minetime;
+        int walltime;
         public override void HoldItem(Item item, Player player)
         {
-            
+            int xtilepos = (int)(Main.MouseWorld.X) / 16;
+            int ytilepos = (int)(Main.MouseWorld.Y) / 16;
+            if (GetInstance<Configurations>().HammarTime)
+            {
+                walltime++;
+                if (player.HeldItem.hammer >= 1 && player.controlUseItem)
+                {
+                    if (walltime >= player.HeldItem.useTime)
+                    {
+                        if (Main.tile[xtilepos, ytilepos].WallType is WallID.AmethystUnsafe or WallID.BlueDungeonSlabUnsafe or WallID.BlueDungeonTileUnsafe or WallID.BlueDungeonSlabUnsafe or WallID.BlueDungeonUnsafe
+                            or WallID.CaveUnsafe or WallID.Cave2Unsafe or WallID.Cave3Unsafe or WallID.Cave4Unsafe or WallID.Cave5Unsafe or WallID.Cave6Unsafe or WallID.Cave7Unsafe or WallID.Cave8Unsafe
+                            or WallID.CorruptGrassUnsafe or WallID.CorruptionUnsafe1 or WallID.CorruptionUnsafe2 or WallID.CorruptionUnsafe3 or WallID.CorruptionUnsafe4
+                              or WallID.CrimsonGrassUnsafe or WallID.CrimsonUnsafe1 or WallID.CrimsonUnsafe2 or WallID.CrimsonUnsafe3 or WallID.CrimsonUnsafe4 or WallID.CrimstoneUnsafe or WallID.DiamondUnsafe or WallID.DirtUnsafe or WallID.DirtUnsafe1
+                               or WallID.DirtUnsafe2 or WallID.DirtUnsafe3 or WallID.DirtUnsafe4 or WallID.EbonstoneUnsafe or WallID.EmeraldUnsafe or WallID.FlowerUnsafe or WallID.GraniteUnsafe or WallID.GrassUnsafe or WallID.GreenDungeonSlabUnsafe
+                                or WallID.GreenDungeonTileUnsafe or WallID.GreenDungeonUnsafe or WallID.HallowedGrassUnsafe or WallID.HallowUnsafe1 or WallID.HallowUnsafe2 or WallID.HallowUnsafe3 or WallID.HallowUnsafe4
+                                 or WallID.HellstoneBrickUnsafe or WallID.HiveUnsafe or WallID.IceUnsafe or WallID.JungleUnsafe or WallID.JungleUnsafe1 or WallID.JungleUnsafe2 or WallID.JungleUnsafe3 or WallID.JungleUnsafe4
+                                 or WallID.LavaUnsafe1 or WallID.LavaUnsafe2 or WallID.LavaUnsafe3 or WallID.LavaUnsafe4 or WallID.LihzahrdBrickUnsafe or WallID.LivingWoodUnsafe
+                                   or WallID.MarbleUnsafe or WallID.MudUnsafe or WallID.MushroomUnsafe or WallID.ObsidianBackUnsafe or WallID.ObsidianBrickUnsafe or WallID.PearlstoneBrickUnsafe or WallID.PinkDungeonSlabUnsafe or WallID.PinkDungeonTileUnsafe
+                                    or WallID.PinkDungeonUnsafe or WallID.RocksUnsafe1 or WallID.RocksUnsafe2 or WallID.RocksUnsafe3 or WallID.RocksUnsafe4 or WallID.RubyUnsafe or WallID.SapphireUnsafe
+                                     or WallID.SnowWallUnsafe or WallID.SpiderUnsafe or WallID.TopazUnsafe
+                               )
+                        {
+                            player.PickWall((int)(Main.MouseWorld.X / 16) - 0, (int)(Main.MouseWorld.Y / 16) - 0, player.HeldItem.hammer / 2);
+                            walltime = 0;
+                        }
+                    }
+                }
+            }
+            if (GetInstance<Configurations>().BigBoiDrill)
+            {
+                minetime++;
 
+                if ((player.HeldItem.pick >= 1 || player.HeldItem.hammer >= 1) && player.controlUseItem && player.controlUseTile && player.HeldItem.channel == true)
+                {
+                    if (minetime >= player.HeldItem.useTime + 1)
+                    {
+                        if (!Main.SmartCursorIsUsed)
+                        {
+                            //if (Vector2.Distance(player.Center, Main.MouseWorld) <= (6 * 16) + (player.HeldItem.tileBoost * 16)) //6 tiles plus bonus reach
+                            if (player.Center.X <= Main.MouseWorld.X + (6 * 16) + (player.HeldItem.tileBoost * 16) + (player.blockRange * 16) && 
+                                player.Center.X >= Main.MouseWorld.X - (6 * 16) - (player.HeldItem.tileBoost * 16) - (player.blockRange * 16) &&
+                                player.Center.Y <= Main.MouseWorld.Y + (5 * 16) + (player.HeldItem.tileBoost * 16) + (player.blockRange * 16) && 
+                                player.Center.Y >= Main.MouseWorld.Y - (5 * 16) - (player.HeldItem.tileBoost * 16) - (player.blockRange * 16))
+                            {
+                                if (player.HeldItem.pick >= 1)
+                                {
+                                    player.PickTile((int)(Main.MouseWorld.X / 16) - 1, (int)(Main.MouseWorld.Y / 16) - 1, player.HeldItem.pick);
+                                    player.PickTile((int)(Main.MouseWorld.X / 16) - 0, (int)(Main.MouseWorld.Y / 16) - 1, player.HeldItem.pick);
+                                    player.PickTile((int)(Main.MouseWorld.X / 16) + 1, (int)(Main.MouseWorld.Y / 16) - 1, player.HeldItem.pick);
+                                    player.PickTile((int)(Main.MouseWorld.X / 16) - 1, (int)(Main.MouseWorld.Y / 16) - 0, player.HeldItem.pick);
+                                    player.PickTile((int)(Main.MouseWorld.X / 16) + 1, (int)(Main.MouseWorld.Y / 16) - 0, player.HeldItem.pick);
+                                    player.PickTile((int)(Main.MouseWorld.X / 16) - 1, (int)(Main.MouseWorld.Y / 16) + 1, player.HeldItem.pick);
+                                    player.PickTile((int)(Main.MouseWorld.X / 16) - 0, (int)(Main.MouseWorld.Y / 16) + 1, player.HeldItem.pick);
+                                    player.PickTile((int)(Main.MouseWorld.X / 16) + 1, (int)(Main.MouseWorld.Y / 16) + 1, player.HeldItem.pick);
+                                }
+                                if (player.HeldItem.hammer >= 1)
+                                {
+                                    player.PickWall((int)(Main.MouseWorld.X / 16) - 1, (int)(Main.MouseWorld.Y / 16) - 1, player.HeldItem.hammer);
+                                    player.PickWall((int)(Main.MouseWorld.X / 16) - 0, (int)(Main.MouseWorld.Y / 16) - 1, player.HeldItem.hammer);
+                                    player.PickWall((int)(Main.MouseWorld.X / 16) + 1, (int)(Main.MouseWorld.Y / 16) - 1, player.HeldItem.hammer);
+                                    player.PickWall((int)(Main.MouseWorld.X / 16) - 1, (int)(Main.MouseWorld.Y / 16) - 0, player.HeldItem.hammer);
+                                    player.PickWall((int)(Main.MouseWorld.X / 16) + 1, (int)(Main.MouseWorld.Y / 16) - 0, player.HeldItem.hammer);
+                                    player.PickWall((int)(Main.MouseWorld.X / 16) - 1, (int)(Main.MouseWorld.Y / 16) + 1, player.HeldItem.hammer);
+                                    player.PickWall((int)(Main.MouseWorld.X / 16) - 0, (int)(Main.MouseWorld.Y / 16) + 1, player.HeldItem.hammer);
+                                    player.PickWall((int)(Main.MouseWorld.X / 16) + 1, (int)(Main.MouseWorld.Y / 16) + 1, player.HeldItem.hammer);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (player.HeldItem.pick >= 1)
+                            {
+                                player.PickTile((int)(Main.SmartCursorX) - 1, (int)(Main.SmartCursorY) - 1, player.HeldItem.pick);
+                                player.PickTile((int)(Main.SmartCursorX) - 0, (int)(Main.SmartCursorY) - 1, player.HeldItem.pick);
+                                player.PickTile((int)(Main.SmartCursorX) + 1, (int)(Main.SmartCursorY) - 1, player.HeldItem.pick);
+                                player.PickTile((int)(Main.SmartCursorX) - 1, (int)(Main.SmartCursorY) - 0, player.HeldItem.pick);
+                                player.PickTile((int)(Main.SmartCursorX) + 1, (int)(Main.SmartCursorY) - 0, player.HeldItem.pick);
+                                player.PickTile((int)(Main.SmartCursorX) - 1, (int)(Main.SmartCursorY) + 1, player.HeldItem.pick);
+                                player.PickTile((int)(Main.SmartCursorX) - 0, (int)(Main.SmartCursorY) + 1, player.HeldItem.pick);
+                                player.PickTile((int)(Main.SmartCursorX) + 1, (int)(Main.SmartCursorY) + 1, player.HeldItem.pick);
+                            }
+                            if (player.HeldItem.hammer >= 1)
+                            {
+                                player.PickWall((int)(Main.SmartCursorX) - 1, (int)(Main.SmartCursorY) - 1, player.HeldItem.hammer);
+                                player.PickWall((int)(Main.SmartCursorX) - 0, (int)(Main.SmartCursorY) - 1, player.HeldItem.hammer);
+                                player.PickWall((int)(Main.SmartCursorX) + 1, (int)(Main.SmartCursorY) - 1, player.HeldItem.hammer);
+                                player.PickWall((int)(Main.SmartCursorX) - 1, (int)(Main.SmartCursorY) - 0, player.HeldItem.hammer);
+                                player.PickWall((int)(Main.SmartCursorX) + 1, (int)(Main.SmartCursorY) - 0, player.HeldItem.hammer);
+                                player.PickWall((int)(Main.SmartCursorX) - 1, (int)(Main.SmartCursorY) + 1, player.HeldItem.hammer);
+                                player.PickWall((int)(Main.SmartCursorX) - 0, (int)(Main.SmartCursorY) + 1, player.HeldItem.hammer);
+                                player.PickWall((int)(Main.SmartCursorX) + 1, (int)(Main.SmartCursorY) + 1, player.HeldItem.hammer);
+                            }
+                        }
+                        minetime = 0;
+                    }
+                }
+            }
+        
             float drillspeed = player.pickSpeed * 100; //Get the player's pickaxe speed times 100 (done to prevent it rounding to 0 and pick speed is between 0 and 1)
             int drillspeed2 = (int)drillspeed; //Convert float to int
 
@@ -576,9 +686,10 @@ namespace StormQoL
         public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
         {
             Player player = Main.LocalPlayer;
-            if (GetInstance<Configurations>().superCrit)
+
+            foreach (TooltipLine line in tooltips)
             {
-                foreach (TooltipLine line in tooltips)
+                if (GetInstance<Configurations>().superCrit)
                 {
                     if (item.CountsAsClass(DamageClass.Generic))
                     {
@@ -620,6 +731,23 @@ namespace StormQoL
                         if (line.Mod == "Terraria" && line.Name == "CritChance")
                         {
                             line.Text = line.Text + "\n[c/DBBD00:" + (Math.Min(100, Math.Max(0, (item.crit + (int)player.GetCritChance(DamageClass.Generic) + (int)player.GetCritChance(DamageClass.Throwing) - 100)))) + "% super crit chance]";
+                        }
+                    }
+                }
+                if (GetInstance<Configurations>().BigBoiDrill)
+                {
+                    if (item.pick >= 1 && item.channel)
+                    {
+                        if (line.Mod == "Terraria" && line.Name == "PickPower")
+                        {
+                            line.Text = line.Text + "\n[c/00ffeb:- Hold right click while mining to mine in a 3x3 area]";
+                        }
+                    }
+                    if (item.hammer >= 1 && item.channel)
+                    {
+                        if (line.Mod == "Terraria" && line.Name == "HammerPower")
+                        {
+                            line.Text = line.Text + "\n[c/00ffeb:- Hold right click while breaking walls to break walls in a 3x3 area]";
                         }
                     }
                 }
