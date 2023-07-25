@@ -109,6 +109,15 @@ Mods: {
 						'''
 				}
 
+				tistheseason: {
+					Label: Toggle seasonal events
+					Tooltip:
+						'''
+						Switch between having the Halloween, Christmas, or both effects active
+						Events will clear after a new day if the option is set back to "none"
+						'''
+				}
+
 				noHappy4U: {
 					Label: Remove NPC happiness
 					Tooltip:
