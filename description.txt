@@ -3,27 +3,27 @@ This mod allows you to:
 
 -Configure the kill count for the pillars
 
--Customise the damage variance for players and enemies (1.4.4) / Disable damage variance (1.4.3)
+-Customise the damage variance for players and enemies
 -Allows for "super crits", if your crit chance is above 100% however much by is the chance to perform a super crit, which deals x3 damage as a regular hit
 
--Choose how long it takes for you to respawn (1.4.4)
--Allow you to respawn at full health (1.4.4)
+-Choose how long it takes for you to respawn
+-Allow you to respawn at full health 
 -Prevent your own explosives from dealing self-damage (Doesn't work with exploding bullets for some reason)
--Prevent certain cavern traps from harming you (Doesn't work on Temple traps or any trap in "No traps" worlds (1.4.4)
--Prevent you from dropping a tombstone on death (1.4.4)
--Prevent you from being chilled in water in a snow biome in Expert mode (1.4.4)
+-Prevent certain cavern traps from harming you (Doesn't work on Temple traps or any trap in "No traps" worlds
+-Prevent you from dropping a tombstone on death
+-Prevent you from being chilled in water in a snow biome in Expert mode
 
 -Allow Axes and Hammers to benefit from Mining Speed buffs.
 -Allows Mechancial tools to benefit from mining speed buffs (Drills, Chainsaws, and Jackhammers)
--Allows drills to mine in a 3x3 area (1.4.4)
--Allows unsafe walls to be broken from the inside (1.4.4)
--Greatly increase your block placement speed (1.4.4)
+-Allows drills to mine in a 3x3 area
+-Allows unsafe walls to be broken from the inside
+-Greatly increase your block placement speed
 
--Allows certain boss drops to be shimmerable into eachother (1.4.4)
--Prevent your from falling through shimmer (1.4.4)
+-Allows certain boss drops to be shimmerable into eachother
+-Prevent your from falling through shimmer
 
--Enable Halloween/Christmas (1.4.4)
--Unlock an enemy's full bestiary entry after just 1 kill (1.4.4)
+-Enable Halloween/Christmas
+-Unlock an enemy's full bestiary entry after just 1 kill
 -Prevent prehardmode enemy stats from scaling in Expert hardmode 
 -Disable dev items dropping from treasure bags
 -Make falling stars fall as items instead of projectiles

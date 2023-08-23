@@ -219,10 +219,12 @@ namespace StormQoL
             base.SetDefaults(projectile);
             if (GetInstance<Configurations>().NoTraps && !Main.noTrapsWorld)
             {
-                if (projectile.type is ProjectileID.Boulder or ProjectileID.PoisonDart or ProjectileID.Explosives or ProjectileID.GeyserTrap or ProjectileID.RollingCactus or ProjectileID.RollingCactusSpike)
+                if (projectile.type is ProjectileID.Boulder or ProjectileID.PoisonDart or ProjectileID.Explosives or ProjectileID.GeyserTrap or
+                    ProjectileID.RollingCactus or ProjectileID.RollingCactusSpike or ProjectileID.GasTrap or ProjectileID.TNTBarrel or ProjectileID.LifeCrystalBoulder)
                 {
                     projectile.hostile = false;
                 }
+
             }
             if (GetInstance<Configurations>().FckGraves)
             {
@@ -399,7 +401,7 @@ namespace StormQoL
                 //EVENT bosses
                 //The mage of darkness
                 ///N/A
-                //Get of of my swamp
+                //Get out of my swamp
                 if (item.type == ItemID.DD2SquireDemonSword)
                     ItemID.Sets.ShimmerTransformToItem[item.type] = ItemID.MonkStaffT1;
                 if (item.type == ItemID.MonkStaffT1)
@@ -901,7 +903,7 @@ namespace StormQoL
                 {
                     shop.Add(ItemID.TeleportationPylonOcean);
                 }
-                if (shop.NpcType == NPCID.Dryad || shop.NpcType == NPCID.Painter || shop.NpcType == NPCID.WitchDoctor) //Jungle
+                if (shop.NpcType == NPCID.Dryad || (shop.NpcType == NPCID.Painter && shop.Name != "Decor") || shop.NpcType == NPCID.WitchDoctor) //Jungle
                 {
                     shop.Add(ItemID.TeleportationPylonJungle);
                 }
