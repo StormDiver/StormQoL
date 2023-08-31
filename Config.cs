@@ -28,69 +28,97 @@ using MonoMod.Cil;
 
 namespace StormQoL
 {
+    [BackgroundColor(5, 51, 34, 200)]
+
     public class Configurations : ModConfig //configuration settings
     {
         public override ConfigScope Mode => ConfigScope.ServerSide;
-
         [Header("CelestialEventShield")]
+
+        //[Label("Enable custom Pillar shield kill count")]
+        //[Tooltip("If on then the "Pillar shield kill count" configuration below will be applied")]
+        [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
+
+        public bool shieldHealthNormalbool { get; set; }
 
         //[Label("Pillar shield kill count")]
         //[Tooltip("How many enemies will have to be defeated for the shield to be destroyed")]
         [Range(10, 100)]
         [Slider]
         [DefaultValue(100)]
-        //[ReloadRequired]
-        public int shieldHealthNormal;
+        [BackgroundColor(27, 130, 114)]
+        public int shieldHealthNormal { get; set; }
 
         [Header("Damage")]
+        //[Label("Enable custom Damage variance")]
+        //[Tooltip("If on then the "Set custom damage variance" configuration below will be applied (Requires reload)")]
+        [ReloadRequired] //Yes
+        [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
+        public bool DamageSpreadbool { get; set; }
 
-        //[Label("Set Custom Damage variance")]
+        //[Label(" -Set Custom Damage variance")]
         //[Tooltip("Allows you to set a custom damage variance percentage for all damage dealt and taken (Requires reload)")]
         [ReloadRequired] //Yes
         [Range(0, 100)]
         [Slider]
         [DefaultValue(15)]
+        [BackgroundColor(27, 130, 114)]
         public int DamageSpread { get; set; }
 
         //[Label("Enable Super Crits")]
         //[Tooltip("Every percentage your weapons crit chance is above 100% is the chance for a super crit that deals x3 damage (Requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
         public bool superCrit { get; set; }
 
         [Header("PlayerTweaks")]
 
-        //[Label("Respawn timer (seconds)")]
+        //[Label("Enable custom respawn timer")]
+        //[Tooltip("If on then the "Respawn timer" configuration below will be applied")]
+        [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
+        public bool Respwnedbool { get; set; }
+
+        //[Label(" -Respawn timer (seconds)")]
         //[Tooltip("Allows you to choose how long the cooldown for respawning is")]
         [Range(0, 30)]
         [Slider]
         [DefaultValue(15)]
+        [BackgroundColor(27, 130, 114)]
         public int Respwned { get; set; }
 
         //[Label("Respawn with full health")]
         //[Tooltip("Makes you respawn with a full bar of health")]
         [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
         public bool TheHealth { get; set; }
 
         //[Label("Prevent your own explosives from harming you")]
         //[Tooltip("This will prevent any explosive item you launch/throw from inflicting self-damage (Doesn't work with explosive Bullets) (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
         public bool NoBoomBoom { get; set; }
 
         //[Label("Prevent certain generated traps from harming you.")]
         //[Tooltip("Prevents traps such as dart traps, boulders, and explosives from harming you, does not affect lihzarhd traps or 'No Traps' worlds")]
         [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
         public bool NoTraps { get; set; }
 
         //[Label("Don't drop a tombstone on death")]
         //[Tooltip("Stops you from dropping a tombstone on death, great for preventing unwanted graveyards or just grave clutter.")]
         [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
         public bool FckGraves { get; set; }
 
         //[Label("Prevent being chilled in expert snow biome water")]
         //[Tooltip("Prevents you from being inflicted with the chilled debuff while in water in an expert snow biome.")]
         [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
         public bool NoChill { get; set; }
 
         [Header("MiningSpeedTweaks")]
@@ -99,24 +127,28 @@ namespace StormQoL
         //[Tooltip("Allows Axes and Hammers to mine faster if you have any mining buffs equipped, works with modded tools too (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
         public bool FastChop4U { get; set; }
 
         //[Label("Allow mechanical tools to benefit from mining buffs")]
         //[Tooltip("Allows mechanical tools to mine faster if you have any mining buffs equipped, works with modded tools too (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
         public bool FastDrill4U { get; set; }
 
         //[Label("Enable 3x3 mining for drills")]
         //[Tooltip("Allows drills to mine in a 3x3 area when holding right click while mining, also applies for walls with Jackhammers)]
         //[ReloadRequired] //Yes
         [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
         public bool BigBoiDrill { get; set; }
 
         //[Label("Allows unsafe walls to be broken from the inside")]
         //[Tooltip("Allows hammers to break unsafe walls even if they're surrounded by unsafe walls")]
         //[ReloadRequired] //Yes
         [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
         public bool HammarTime { get; set; }
 
         //[Label("Choose block placement speed")]
@@ -125,7 +157,7 @@ namespace StormQoL
         [DrawTicks]
         [OptionStrings(new string[] { "Default", "Fast", "Insanely Fast" })]
         [DefaultValue("Default")]
-
+        [BackgroundColor(27, 130, 114)]
         public string SpeedPlace { get; set; }
 
         [Header("Shimmer")]
@@ -134,11 +166,13 @@ namespace StormQoL
         //[Tooltip("This will allow most weapons and armour dropped from bosses/minibosses to be shimmered into another drop from the same boss (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
         public bool RIPBossRNG { get; set; }
 
         //[Label("Grant total immunity to sinking in shimmer")]
         //[Tooltip("This will prevent you from falling through the floor if you land in shimmer, it even prevents it if you accidentally hold down while wearing the cloak.")]
         [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
         public bool NoSink { get; set; }
 
         [Header("MiscTweaks")]
@@ -149,41 +183,47 @@ namespace StormQoL
         [DrawTicks]
         [OptionStrings(new string[] { "None", "Halloween", "Christmas", "Both" })]
         [DefaultValue("None")]
-
+        [BackgroundColor(27, 130, 114)]
         public string tistheseason { get; set; }
 
         //[Label("Remove NPC happiness")]
         //[Tooltip("This will completely remove the happiness system from all NPCs, also makes NPCs always sell the pylon for their favourite biome (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
         public bool noHappy4U { get; set; }
 
         //[Label("Unlock full bestiary entries with just 1 kill")]
         //[Tooltip("This will make it so killing a single enemy unlocks its entire bestiary entry (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
         public bool bestUnlocks { get; set; }
 
         //[Label("Prevent prehardmode enemy stats from scaling in expert hardmode")]
         //[Tooltip("This will prevent all prehardmode enemies from having their stats scaled in expert mode during hardmode (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
         public bool NoStronk { get; set; }
 
         //[Label("Prevent Treasure Bags from dropping dev items")]
         //[Tooltip("If you have a lot of bags to open and don't want your inventory cluttered by dev items (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
         public bool NoInventoryClutter { get; set; }
 
         //[Label("Falling Stars fall as items instead of projectiles")]
         //[Tooltip("This will turn all falling stars into the item as soon as they spawn instead of being a damaging projectile, useful if you want an uninterrupted boss fight")]
         [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
         public bool NoStar4U { get; set; }
 
         //[Label("Make Blazing Wheels and Spike balls killable")]
         //[Tooltip("This will allow you to deal damage and kill Blazing Wheels and Dungeon Spike balls, useful if one spawned in an awkward place")]
         [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
         public bool RIPdungeon { get; set; }
 
     }
@@ -191,7 +231,10 @@ namespace StormQoL
     {
         public override void Load()
         {
-            Main.DefaultDamageVariationPercent = GetInstance<Configurations>().DamageSpread;
+            if (GetInstance<Configurations>().DamageSpreadbool)
+            {
+                Main.DefaultDamageVariationPercent = GetInstance<Configurations>().DamageSpread;
+            }
             base.Load();
         }
         public override void Unload()
@@ -730,8 +773,10 @@ namespace StormQoL
         }
         public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
         {
-            Player.respawnTimer = (GetInstance<Configurations>().Respwned * 60); //Change respawn timer
-
+            if (GetInstance<Configurations>().Respwnedbool)
+            {
+                Player.respawnTimer = (GetInstance<Configurations>().Respwned * 60); //Change respawn timer
+            }
             base.Kill(damage, hitDirection, pvp, damageSource);
         }
         public override void OnRespawn()
@@ -1060,22 +1105,24 @@ namespace StormQoL
     {
         public override void PreUpdateWorld()
         {
-
-            if (NPC.ShieldStrengthTowerVortex > GetInstance<Configurations>().shieldHealthNormal)
+            if (GetInstance<Configurations>().shieldHealthNormalbool)
             {
-                NPC.ShieldStrengthTowerVortex = GetInstance<Configurations>().shieldHealthNormal;
-            }
-            if (NPC.ShieldStrengthTowerSolar > GetInstance<Configurations>().shieldHealthNormal)
-            {
-                NPC.ShieldStrengthTowerSolar = GetInstance<Configurations>().shieldHealthNormal;
-            }
-            if (NPC.ShieldStrengthTowerNebula > GetInstance<Configurations>().shieldHealthNormal)
-            {
-                NPC.ShieldStrengthTowerNebula = GetInstance<Configurations>().shieldHealthNormal;
-            }
-            if (NPC.ShieldStrengthTowerStardust > GetInstance<Configurations>().shieldHealthNormal)
-            {
-                NPC.ShieldStrengthTowerStardust = GetInstance<Configurations>().shieldHealthNormal;
+                if (NPC.ShieldStrengthTowerVortex > GetInstance<Configurations>().shieldHealthNormal)
+                {
+                    NPC.ShieldStrengthTowerVortex = GetInstance<Configurations>().shieldHealthNormal;
+                }
+                if (NPC.ShieldStrengthTowerSolar > GetInstance<Configurations>().shieldHealthNormal)
+                {
+                    NPC.ShieldStrengthTowerSolar = GetInstance<Configurations>().shieldHealthNormal;
+                }
+                if (NPC.ShieldStrengthTowerNebula > GetInstance<Configurations>().shieldHealthNormal)
+                {
+                    NPC.ShieldStrengthTowerNebula = GetInstance<Configurations>().shieldHealthNormal;
+                }
+                if (NPC.ShieldStrengthTowerStardust > GetInstance<Configurations>().shieldHealthNormal)
+                {
+                    NPC.ShieldStrengthTowerStardust = GetInstance<Configurations>().shieldHealthNormal;
+                }
             }
             if (GetInstance<Configurations>().tistheseason == "None")
             {

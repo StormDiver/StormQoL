@@ -13,13 +13,23 @@ Mods: {
 					MiscTweaks: Misc Tweaks
 				}
 
+				shieldHealthNormalbool: {
+					Label: *Enable custom Pillar shield kill count
+					Tooltip: If on then the "Pillar shield kill count" configuration below will be applied
+				}
+
 				shieldHealthNormal: {
-					Label: Pillar shield kill count
+					Label: - Pillar shield kill count
 					Tooltip: How many enemies will have to be defeated for the shield to be destroyed
 				}
 
+				DamageSpreadbool: {
+					Label: *Enable custom damage variance
+					Tooltip: If on then the "Set custom damage variance" configuration below will be applied (Requires reload)
+				}
+
 				DamageSpread: {
-					Label: Set Custom Damage variance
+					Label: - Set custom damage variance
 					Tooltip: Allows you to set a custom damage variance percentage for all damage dealt and taken (Requires reload)
 				}
 
@@ -28,8 +38,13 @@ Mods: {
 					Tooltip: Every percentage your weapons crit chance is above 100% is the chance for a super crit that deals x3 damage (Requires reload)
 				}
 
+				Respwnedbool: {
+					Label: *Enable custom respawn timer
+					Tooltip: If on then the "Respawn timer" configuration below will be applied
+				}
+
 				Respwned: {
-					Label: Respawn timer (seconds)
+					Label: - Respawn timer (seconds)
 					Tooltip: Allows you to choose how long the cooldown for respawning is
 				}
 
