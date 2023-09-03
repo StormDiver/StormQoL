@@ -1,4 +1,4 @@
 displayName = [c/22DD97:Storm's Tweaks Mod]
 author = Storm A
-version = 1.11.2
+version = 1.11.3
 homepage = https://discord.gg/VJvf2HkxtA
