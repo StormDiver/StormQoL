@@ -1,4 +1,4 @@
-Storm's Tweaks Mod is a very small mod that adds some configuration options that change some small mechanics of the game.
+[b]Storm's Tweaks Mod[/b] is a quality of life mod that adds some configuration options that change some small mechanics of the game.
 This mod allows you to:
 
 -Configure the kill count for the pillars
@@ -31,3 +31,4 @@ This mod allows you to:
 
 
 Also check out my decently sized content mod, Storm's Additions Mod: https://steamcommunity.com/workshop/filedetails/?id=2747380524
+[quote=tModLoader]Developed By Storm A[/quote]
