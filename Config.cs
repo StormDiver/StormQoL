@@ -97,7 +97,7 @@ namespace StormQoL
         public bool TheHealth { get; set; }
 
         //[Label("Prevent your own explosives from harming you")]
-        //[Tooltip("This will prevent any explosive item you launch/throw from inflicting self-damage (Doesn't work with explosive Bullets) (requires reload)")]
+        //[Tooltip("This will prevent any explosive item you launch/throw from inflicting self-damage (requires reload)")]
         [ReloadRequired] //Yes
         [DefaultValue(false)]
         [BackgroundColor(27, 130, 114)]
@@ -252,9 +252,12 @@ namespace StormQoL
                 if (projectile.friendly)
                 {
                     ProjectileID.Sets.RocketsSkipDamageForPlayers[projectile.type] = true;
+                    projectile.hostile = false;
                 }
                 if (projectile.type == ProjectileID.ExplosiveBullet)
                 {
+                    ProjectileID.Sets.RocketsSkipDamageForPlayers[projectile.type] = true;
+                    projectile.hostile = false;
                     projectile.usesLocalNPCImmunity = true;
                     projectile.localNPCHitCooldown = 10;
                 }
@@ -282,6 +285,13 @@ namespace StormQoL
 
         public override void AI(Projectile projectile)
         {
+            if (GetInstance<Configurations>().NoBoomBoom)
+            {
+                if (projectile.friendly)
+                {
+                    projectile.hostile = false;
+                }
+            }
             if (GetInstance<Configurations>().NoStar4U)
             {
                 if (projectile.type == ProjectileID.FallingStar)
