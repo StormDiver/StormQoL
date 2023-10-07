@@ -6,7 +6,7 @@ Mods: {
 
 				Headers: {
 					CelestialEventShield: Celestial Event Shield
-					Damage: Damage
+					Damage: Weapon Tweaks
 					PlayerTweaks: Player Tweaks
 					MiningSpeedTweaks: Mining/Placement Speed Tweaks
 					Shimmer: Shimmer
@@ -36,6 +36,11 @@ Mods: {
 				superCrit: {
 					Label: Enable Super Crits
 					Tooltip: Every percentage your weapons crit chance is above 100% is the chance for a super crit that deals x3 damage
+				}
+
+				moreInfo: {
+					Label: Display exact use speed and knockback values
+					Tooltip: Shows the exact usetime and knockback values of all items next to their respective tooltip lines
 				}
 
 				Respwnedbool: {

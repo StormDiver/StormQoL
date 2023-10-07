@@ -1,10 +1,14 @@
-Storm's Tweaks Mod is a quality of life mod that adds some configuration options that change some small mechanics of the game.
+Storm's Tweaks Mod is a quality of life mod that adds some configuration options that change some small mechanics of the game. 
+
+Note all tweaks are initially disabled so you can manually enable only the ones you want.
+
 This mod allows you to:
 
 -Configure the kill count for the pillars
 
 -Customise the damage variance for players and enemies
 -Allows for "super crits", if your crit chance is above 100% however much by is the chance to perform a super crit, which deals x3 damage as a regular hit
+-Allows you to view the exact usetime and knockback stats of any item
 
 -Choose how long it takes for you to respawn
 -Allow you to respawn at full health 

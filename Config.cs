@@ -74,6 +74,13 @@ namespace StormQoL
         [BackgroundColor(27, 130, 114)]
         public bool superCrit { get; set; }
 
+        //[Label("Display exact use speed and knockback values")]
+        //[Tooltip("Shows the exact usetime and knockback values of all items next to their respective tooltip lines")]
+        //[ReloadRequired] //No
+        [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
+        public bool moreInfo { get; set; }
+
         [Header("PlayerTweaks")]
 
         //[Label("Enable custom respawn timer")]
@@ -816,6 +823,17 @@ namespace StormQoL
 
             foreach (TooltipLine line in tooltips)
             {
+                if (GetInstance<Configurations>().moreInfo)
+                {
+                    if (line.Mod == "Terraria" && line.Name == "Speed")
+                    {
+                        line.Text = line.Text + " (" + Math.Floor((item.useAnimation / player.GetWeaponAttackSpeed(item))) + " usetime)"; //show use time affeced by speed
+                    }
+                    if (line.Mod == "Terraria" && line.Name == "Knockback")
+                    {
+                        line.Text = line.Text + " (" + Math.Round(item.knockBack, 1) + " knockback)"; //round to 1 decimal place, auto updates
+                    }
+                }
                 if (GetInstance<Configurations>().superCrit)
                 {
                     if (item.CountsAsClass(DamageClass.Generic))
