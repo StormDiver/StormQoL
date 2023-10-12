@@ -214,6 +214,12 @@ namespace StormQoL
         [BackgroundColor(27, 130, 114)]
         public bool NoStronk { get; set; }
 
+        //[Label("Make the Wizard display exact luck values")]
+        //[Tooltip("This will make the wizard display the exact values for total luck, coin luck, and torch")]
+        [DefaultValue(false)]
+        [BackgroundColor(27, 130, 114)]
+
+        public bool LuckyU { get; set; }
         //[Label("Prevent Treasure Bags from dropping dev items")]
         //[Tooltip("If you have a lot of bags to open and don't want your inventory cluttered by dev items (requires reload)")]
         [ReloadRequired] //Yes
@@ -256,7 +262,7 @@ namespace StormQoL
         {
             if (GetInstance<Configurations>().NoBoomBoom)
             {
-                if (projectile.friendly)
+                if (projectile.friendly && projectile.DamageType == DamageClass.Ranged)
                 {
                     ProjectileID.Sets.RocketsSkipDamageForPlayers[projectile.type] = true;
                     projectile.hostile = false;
@@ -294,7 +300,7 @@ namespace StormQoL
         {
             if (GetInstance<Configurations>().NoBoomBoom)
             {
-                if (projectile.friendly)
+                if (projectile.friendly && projectile.DamageType == DamageClass.Ranged)
                 {
                     projectile.hostile = false;
                 }
@@ -776,6 +782,8 @@ namespace StormQoL
                     Player.buffImmune[BuffID.Chilled] = true;
                 }
             }
+            //Main.NewText("Pain is: " + Player.torchLuck / 5, 0, 204, 170);
+
         }
         public override bool CanBeHitByProjectile(Projectile proj)
         {
@@ -827,11 +835,11 @@ namespace StormQoL
                 {
                     if (line.Mod == "Terraria" && line.Name == "Speed")
                     {
-                        line.Text = line.Text + " (" + Math.Floor((item.useAnimation / player.GetWeaponAttackSpeed(item))) + " usetime)"; //show use time affeced by speed
+                        line.Text = line.Text + " (" + Math.Round((item.useAnimation / player.GetWeaponAttackSpeed(item))) + " usetime)"; //show use time affeced by speed
                     }
                     if (line.Mod == "Terraria" && line.Name == "Knockback")
                     {
-                        line.Text = line.Text + " (" + Math.Round(item.knockBack, 1) + " knockback)"; //round to 1 decimal place, auto updates
+                        line.Text = line.Text + " (" + Math.Round(item.knockBack, 2) + " knockback)"; //round to 1 decimal place, auto updates
                     }
                 }
                 if (GetInstance<Configurations>().superCrit)
@@ -899,7 +907,7 @@ namespace StormQoL
             }
         }
     }
-    
+
     public class ConfigNPCeffects : GlobalNPC
     {
         public override bool InstancePerEntity => true;
@@ -989,6 +997,16 @@ namespace StormQoL
                     shop.Add(ItemID.TeleportationPylonMushroom);
                 }
             }
+        }
+        public override void GetChat(NPC npc, ref string chat)
+        {
+            if (GetInstance<Configurations>().LuckyU)
+                if (npc.type == NPCID.Wizard)
+                {
+                    chat = chat + "\n\n[c/A45EE5:Your current luck value is " + Math.Round(Main.LocalPlayer.luck, 2) + "!]" +
+                        "\n[c/A45EE5:Your current coin luck value is " + Math.Round(Main.LocalPlayer.coinLuck) + "!]" +
+                        "\n[c/A45EE5:Your current torch luck value is " + Math.Round(Main.LocalPlayer.torchLuck / 5, 2) + "!]";
+                }
         }
 
         public override void HitEffect(NPC npc, NPC.HitInfo hit)

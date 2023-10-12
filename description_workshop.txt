@@ -29,6 +29,7 @@ This mod allows you to:
 -Enable Halloween/Christmas 
 -Unlock an enemy's full bestiary entry after just 1 kill 
 -Prevent prehardmode enemy stats from scaling in Expert hardmode 
+-Make the Wizard display exact luck values
 -Disable dev items dropping from treasure bags
 -Make falling stars fall as items instead of projectiles
 -Make Blazing Wheels and Spike balls killable

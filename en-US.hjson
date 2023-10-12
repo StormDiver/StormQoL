@@ -153,6 +153,11 @@ Mods: {
 					Tooltip: This will prevent all prehardmode enemies from having their stats scaled in expert mode during hardmode
 				}
 
+				LuckyU: {
+					Label: Make the Wizard display exact luck values
+					Tooltip: This will make the wizard display the exact values for total luck, coin luck, and torch luck
+				}
+
 				NoInventoryClutter: {
 					Label: Prevent Treasure Bags from dropping dev items
 					Tooltip: If you have a lot of bags to open and don't want your inventory cluttered by dev items
