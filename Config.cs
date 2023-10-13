@@ -25,6 +25,8 @@ using Microsoft.CodeAnalysis;
 using Terraria.WorldBuilding;
 using Terraria.GameContent.Bestiary;
 using MonoMod.Cil;
+using Terraria.Localization;
+using Terraria.Social.WeGame;
 
 namespace StormQoL
 {
@@ -1146,9 +1148,10 @@ namespace StormQoL
             base.OnHitByItem(npc, player, item, hit, damageDone);
         }
     }
-    
     public class Configworldeffects : ModSystem //QoL for the world
     {
+        public static bool warningmessage;
+
         public override void PreUpdateWorld()
         {
             if (GetInstance<Configurations>().shieldHealthNormalbool)
@@ -1179,17 +1182,46 @@ namespace StormQoL
                 Main.xMas = false;
                 Main.halloween = true;
             }
-            else if(GetInstance<Configurations>().tistheseason == "Christmas")
+            else if (GetInstance<Configurations>().tistheseason == "Christmas")
             {
                 Main.xMas = true;
                 Main.halloween = false;
             }
-            else if(GetInstance<Configurations>().tistheseason == "Both")
+            else if (GetInstance<Configurations>().tistheseason == "Both")
             {
                 Main.halloween = true;
                 Main.xMas = true;
             }
+
+
+            //if all tweaks are disabled
+            if (GetInstance<Configurations>().shieldHealthNormalbool == false && GetInstance<Configurations>().shieldHealthNormal == 100 && GetInstance<Configurations>().DamageSpreadbool == false && GetInstance<Configurations>().DamageSpread == 15
+                && GetInstance<Configurations>().superCrit == false && GetInstance<Configurations>().moreInfo == false && GetInstance<Configurations>().Respwnedbool == false && GetInstance<Configurations>().Respwned == 15
+                && GetInstance<Configurations>().TheHealth == false && GetInstance<Configurations>().NoBoomBoom == false && GetInstance<Configurations>().NoTraps == false && GetInstance<Configurations>().FckGraves == false
+                && GetInstance<Configurations>().NoChill == false && GetInstance<Configurations>().FastChop4U == false && GetInstance<Configurations>().FastDrill4U == false && GetInstance<Configurations>().BigBoiDrill == false
+                    && GetInstance<Configurations>().HammarTime == false && GetInstance<Configurations>().SpeedPlace == "Default" && GetInstance<Configurations>().RIPBossRNG == false && GetInstance<Configurations>().NoSink == false
+                    && GetInstance<Configurations>().tistheseason == "None" && GetInstance<Configurations>().noHappy4U == false && GetInstance<Configurations>().bestUnlocks == false && GetInstance<Configurations>().NoStronk == false
+                    && GetInstance<Configurations>().LuckyU == false && GetInstance<Configurations>().NoInventoryClutter == false && GetInstance<Configurations>().NoStar4U == false && GetInstance<Configurations>().RIPdungeon == false)
+            {
+
+                if (!warningmessage)
+                {
+                    if (Main.netMode == 2) // Server
+                    {
+                        Terraria.Chat.ChatHelper.BroadcastChatMessage(NetworkText.FromKey("Storm's Tweaks Mod: It seems you have all of the tweaks disabled\nMake sure to check the config menu and enable the changes you want"), new Color(34, 221, 151));
+                    }
+                    else if (Main.netMode == 0) // Single Player
+                    {
+
+                        Main.NewText("Storm's Tweaks Mod: It seems you have all of the tweaks disabled\nMake sure to check the config menu and enable the changes you want", 34, 221, 151);
+                    }
+                    warningmessage = true;
+                }
+            }
+        }
+        public override void OnWorldUnload()
+        {
+            warningmessage = false;
         }
     }
-
 }
