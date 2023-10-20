@@ -262,20 +262,25 @@ namespace StormQoL
     {     
         public override void SetDefaults(Projectile projectile)
         {
+
             if (GetInstance<Configurations>().NoBoomBoom)
             {
-                if (projectile.friendly && projectile.DamageType == DamageClass.Ranged)
-                {
-                    ProjectileID.Sets.RocketsSkipDamageForPlayers[projectile.type] = true;
-                    projectile.hostile = false;
-                }
-                if (projectile.type == ProjectileID.ExplosiveBullet)
-                {
-                    ProjectileID.Sets.RocketsSkipDamageForPlayers[projectile.type] = true;
-                    projectile.hostile = false;
-                    projectile.usesLocalNPCImmunity = true;
-                    projectile.localNPCHitCooldown = 10;
-                }
+                    if (projectile.friendly && (projectile.DamageType == DamageClass.Melee || projectile.DamageType == DamageClass.Ranged || projectile.DamageType == DamageClass.Magic || projectile.DamageType == DamageClass.Summon || projectile.DamageType == DamageClass.Generic || projectile.DamageType == DamageClass.Throwing)
+                    || projectile.type is ProjectileID.Bomb or ProjectileID.StickyBomb or ProjectileID.BouncyBomb or ProjectileID.DryBomb or 
+                    ProjectileID.WetBomb or ProjectileID.HoneyBomb or ProjectileID.LavaBomb or ProjectileID.BombFish or ProjectileID.ScarabBomb or ProjectileID.DirtBomb or ProjectileID.DirtStickyBomb
+                     or ProjectileID.Dynamite or ProjectileID.StickyDynamite or ProjectileID.BouncyDynamite)
+                    {
+                        ProjectileID.Sets.RocketsSkipDamageForPlayers[projectile.type] = true;
+                        projectile.hostile = false;
+                    }
+                    if (projectile.type == ProjectileID.ExplosiveBullet)
+                    {
+                        ProjectileID.Sets.RocketsSkipDamageForPlayers[projectile.type] = true;
+                        projectile.hostile = false;
+                        projectile.usesLocalNPCImmunity = true;
+                        projectile.localNPCHitCooldown = 10;
+                    }
+                
             }
             base.SetDefaults(projectile);
             if (GetInstance<Configurations>().NoTraps && !Main.noTrapsWorld)
@@ -302,10 +307,14 @@ namespace StormQoL
         {
             if (GetInstance<Configurations>().NoBoomBoom)
             {
-                if (projectile.friendly && projectile.DamageType == DamageClass.Ranged)
+                /*var player = Main.player[projectile.owner];
+                if (player == Main.LocalPlayer)
                 {
-                    projectile.hostile = false;
-                }
+                    if (projectile.friendly)
+                    {
+                        projectile.hostile = false;
+                    }
+                }*/
             }
             if (GetInstance<Configurations>().NoStar4U)
             {
