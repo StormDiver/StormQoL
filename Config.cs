@@ -27,6 +27,7 @@ using Terraria.GameContent.Bestiary;
 using MonoMod.Cil;
 using Terraria.Localization;
 using Terraria.Social.WeGame;
+using static Humanizer.In;
 
 namespace StormQoL
 {
@@ -216,12 +217,12 @@ namespace StormQoL
         [BackgroundColor(27, 130, 114)]
         public bool NoStronk { get; set; }
 
-        //[Label("Make the Wizard display exact luck values")]
-        //[Tooltip("This will make the wizard display the exact values for total luck, coin luck, and torch")]
+        //[Label("Lucky Horseshoe display exact luck values")]
+        //[Tooltip("This will make the lucky horseshoe (and its tinkers) display the exact values for total luck, coin luck, and torch")]
         [DefaultValue(false)]
         [BackgroundColor(27, 130, 114)]
-
         public bool LuckyU { get; set; }
+
         //[Label("Prevent Treasure Bags from dropping dev items")]
         //[Tooltip("If you have a lot of bags to open and don't want your inventory cluttered by dev items (requires reload)")]
         [ReloadRequired] //Yes
@@ -915,6 +916,19 @@ namespace StormQoL
                         }
                     }
                 }
+                if (GetInstance<Configurations>().LuckyU)
+                {
+                    if (item.type is ItemID.LuckyHorseshoe or ItemID.ObsidianHorseshoe or ItemID.BalloonHorseshoeHoney or ItemID.BalloonHorseshoeFart or ItemID.BalloonHorseshoeSharkron or ItemID.BlueHorseshoeBalloon or ItemID.WhiteHorseshoeBalloon
+                        or ItemID.YellowHorseshoeBalloon or ItemID.HorseshoeBundle)
+                    {
+                        if (line.Mod == "Terraria" && line.Name == "Tooltip1")
+                        {
+                            line.Text = line.Text + "\n[c/d2ba5a:Your current luck value is " + Math.Round(Main.LocalPlayer.luck, 2) + "!]" +
+                            "\n[c/d2ba5a:Your current coin luck value is " + Math.Round(Main.LocalPlayer.coinLuck) + "!]" +
+                            "\n[c/d2ba5a:Your current torch luck value is " + Math.Round(Main.LocalPlayer.torchLuck, 2) + "!]";
+                        }
+                    }
+                }
             }
         }
     }
@@ -1011,13 +1025,13 @@ namespace StormQoL
         }
         public override void GetChat(NPC npc, ref string chat)
         {
-            if (GetInstance<Configurations>().LuckyU)
+            /*if (GetInstance<Configurations>().LuckyU)
                 if (npc.type == NPCID.Wizard)
                 {
                     chat = chat + "\n\n[c/A45EE5:Your current luck value is " + Math.Round(Main.LocalPlayer.luck, 2) + "!]" +
                         "\n[c/A45EE5:Your current coin luck value is " + Math.Round(Main.LocalPlayer.coinLuck) + "!]" +
                         "\n[c/A45EE5:Your current torch luck value is " + Math.Round(Main.LocalPlayer.torchLuck / 5, 2) + "!]";
-                }
+                }*/
         }
 
         public override void HitEffect(NPC npc, NPC.HitInfo hit)

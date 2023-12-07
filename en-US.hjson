@@ -154,8 +154,8 @@ Mods: {
 				}
 
 				LuckyU: {
-					Label: Make the Wizard display exact luck values
-					Tooltip: This will make the wizard display the exact values for total luck, coin luck, and torch luck
+					Label: Make the Lucky Horseshoe display exact luck values
+					Tooltip: This will make the Lucky Horseshoe (and its tinkers) display the exact values for total luck, coin luck, and torch luck
 				}
 
 				NoInventoryClutter: {
