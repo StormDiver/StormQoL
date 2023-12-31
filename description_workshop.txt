@@ -3,29 +3,29 @@
 [b]Note all tweaks are initially disabled so you can manually enable only the ones you want.[/b]
 
 This mod allows you to:
-
+[h2]Celestial Event Shield[/h2]
 -Configure the kill count for the pillars
-
+[h2]Weapon/damage tweaks[/h2]
 -Customise the damage variance for players and enemies
 -Allows for "super crits", if your crit chance is above 100% however much by is the chance to perform a super crit, which deals x3 damage as a regular hit
 -Allows you to view the exact usetime and knockback stats of any item
-
+[h2]Player Tweaks[/h2]
 -Choose how long it takes for you to respawn
 -Allow you to respawn at full health
 -Prevent your own explosives from dealing self-damage (Doesn't work with exploding bullets for some reason)
 -Prevent certain cavern traps from harming you (Doesn't work on Temple traps or any trap in "No traps" worlds
 -Prevent you from dropping a tombstone on death
 -Prevent you from being chilled in water in a snow biome in Expert mode
-
+[h2]Mining/Placement Tweaks[/h2]
 -Allow Axes and Hammers to benefit from Mining Speed buffs.
 -Allows Mechancial tools to benefit from mining speed buffs (Drills, Chainsaws, and Jackhammers)
 -Allows drills to mine in a 3x3 area
 -Allows unsafe walls to be broken from the inside
 -Greatly increase your block placement speed
-
+[h2]Shimmer[/h2]
 -Allows certain boss drops to be shimmerable into eachother
 -Prevent you from falling through shimmer 
-
+[h2]Misc Tweaks[/h2]
 -Enable Halloween/Christmas 
 -Unlock an enemy's full bestiary entry after just 1 kill 
 -Prevent prehardmode enemy stats from scaling in Expert hardmode 
@@ -36,4 +36,4 @@ This mod allows you to:
 
 
 Also check out my decently sized content mod, Storm's Additions Mod: https://steamcommunity.com/workshop/filedetails/?id=2747380524
-[quote=tModLoader]Developed By Storm A[/quote]
+[quote=tModLoader]Developed By TheStorm[/quote]
