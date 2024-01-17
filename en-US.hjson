@@ -89,7 +89,7 @@ Mods: {
 				}
 
 				BigBoiDrill: {
-					Label: Enable 3x3 mining for drills and jackhammers
+					Label: Enable 3x3 mining for drills and jackhammers (kinda buggy)
 					Tooltip:
 						'''
 						Allows drills to mine in a 3x3 area when holding right click while mining
