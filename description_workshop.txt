@@ -39,5 +39,4 @@ This mod allows you to:
 -Make Blazing Wheels and Spike balls killable
 
 
-Also check out my decently sized content mod, Storm's Additions Mod: https://steamcommunity.com/workshop/filedetails/?id=2747380524
-[quote=tModLoader]Developed By TheStorm[/quote]
+Also check out my decently sized content mod, [url=https://steamcommunity.com/workshop/filedetails/?id=2747380524]Storm's Additions Mod[/url]
