@@ -578,24 +578,22 @@ namespace StormQoL
         }
         int minetime;
         int walltime;
+        int xtilepos;
+        int ytilepos;
         public override void HoldItem(Item item, Player player)
         {
-            if (GetInstance<Configurations>().BigBoiDrill || GetInstance<Configurations>().HammarTime)
+            if (GetInstance<Configurations>().BigBoiDrill || GetInstance<Configurations>().HammarTime) //jank af but idc
             {
-                int xtilepos = (int)(Main.MouseWorld.X) / 16;
-                int ytilepos = (int)(Main.MouseWorld.Y) / 16;
-
-
-                Tile woodcenter = Main.tile[xtilepos, ytilepos];
-                Tile woodtopleft = Main.tile[xtilepos - 1, ytilepos - 1];
-                Tile woodtopmid = Main.tile[xtilepos - 0, ytilepos - 1];
-                Tile woodtopright = Main.tile[xtilepos + 1, ytilepos - 1];
-                Tile woodmidleft = Main.tile[xtilepos - 1, ytilepos - 0];
-                Tile woodmidright = Main.tile[xtilepos + 1, ytilepos - 0];
-                Tile woodbottomleft = Main.tile[xtilepos - 1, ytilepos + 1];
-                Tile woodbottommid = Main.tile[xtilepos + 0, ytilepos + 1];
-                Tile woodbottomright = Main.tile[xtilepos + 1, ytilepos + 1];
-
+                if (!Main.SmartCursorIsUsed) //regular mining
+                {
+                    xtilepos = (int)(Main.MouseWorld.X) / 16;
+                    ytilepos = (int)(Main.MouseWorld.Y) / 16;                   
+                }
+                else //smart mining
+                {
+                    xtilepos = Main.SmartCursorX;
+                    ytilepos = Main.SmartCursorY;                  
+                }
                 if (GetInstance<Configurations>().HammarTime)
                 {
                     if (player == Main.LocalPlayer)
@@ -605,7 +603,7 @@ namespace StormQoL
                         {
                             if (walltime >= player.HeldItem.useTime)
                             {
-                                if (!Main.wallHouse[woodcenter.WallType])
+                                if (!Main.wallHouse[Main.tile[xtilepos, ytilepos].WallType])
                                 {
                                     player.PickWall((int)(Main.MouseWorld.X / 16) - 0, (int)(Main.MouseWorld.Y / 16) - 0, player.HeldItem.hammer / 2);
                                     walltime = 0;
@@ -614,126 +612,62 @@ namespace StormQoL
                         }
                     }
                 }
-                List<int> woods = new List<int>() { TileID.Trees, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-                if (GetInstance<Configurations>().BigBoiDrill)
+                //List<int> woods = new List<int>() { TileID.Trees, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+                if (GetInstance<Configurations>().BigBoiDrill) //3x3 mining
                 {
                     if (player == Main.LocalPlayer)
                     {
                         minetime++;
-
                         if ((player.HeldItem.pick >= 1 || player.HeldItem.hammer >= 1) && player.controlUseItem && player.controlUseTile && player.HeldItem.channel == true)
                         {
-
                             if (minetime >= player.HeldItem.useTime + 1)
                             {
-                                if (!Main.SmartCursorIsUsed) //regular mining
+                                //make sure it doesn't mine if the cursor is further away than what you can mine
+                                if ((player.Center.X <= Main.MouseWorld.X + (8 * 16) + (player.HeldItem.tileBoost * 16) + (player.blockRange * 16) &&
+                                    player.Center.X >= Main.MouseWorld.X - (8 * 16) - (player.HeldItem.tileBoost * 16) - (player.blockRange * 16) &&
+                                    player.Center.Y <= Main.MouseWorld.Y + (6 * 16) + (player.HeldItem.tileBoost * 16) + (player.blockRange * 16) &&
+                                    player.Center.Y >= Main.MouseWorld.Y - (6 * 16) - (player.HeldItem.tileBoost * 16) - (player.blockRange * 16) && !Main.SmartCursorIsUsed)
+                                    || Main.SmartCursorIsUsed)
                                 {
-                                    //if (Vector2.Distance(player.Center, Main.MouseWorld) <= (6 * 16) + (player.HeldItem.tileBoost * 16)) //6 tiles plus bonus reach
-                                    if (player.Center.X <= Main.MouseWorld.X + (8 * 16) + (player.HeldItem.tileBoost * 16) + (player.blockRange * 16) &&
-                                        player.Center.X >= Main.MouseWorld.X - (8 * 16) - (player.HeldItem.tileBoost * 16) - (player.blockRange * 16) &&
-                                        player.Center.Y <= Main.MouseWorld.Y + (6 * 16) + (player.HeldItem.tileBoost * 16) + (player.blockRange * 16) &&
-                                        player.Center.Y >= Main.MouseWorld.Y - (6 * 16) - (player.HeldItem.tileBoost * 16) - (player.blockRange * 16))
+                                    // pickaxe, make sure not wood
+                                    if (player.HeldItem.pick >= 1 && !Main.tileAxe[Main.tile[xtilepos, ytilepos].TileType] && Main.tile[xtilepos, ytilepos].HasTile)
                                     {
-                                        // pickaxe, make sure not wood
-                                        if (player.HeldItem.pick >= 1 && !Main.tileAxe[woodcenter.TileType] && Main.tile[xtilepos, ytilepos].HasTile)
-                                        {
-                                            //prevent trees being mined
-                                            if (!Main.tileAxe[woodtopleft.TileType])
-                                                player.PickTile((int)(xtilepos) - 1, (int)(ytilepos) - 1, player.HeldItem.pick);
+                                        //prevent trees being mined
+                                        if (!Main.tileAxe[Main.tile[xtilepos - 1, ytilepos - 1].TileType])
+                                            player.PickTile((int)(xtilepos) - 1, (int)(ytilepos) - 1, player.HeldItem.pick);
 
-                                            if (!Main.tileAxe[woodtopmid.TileType])
-                                                player.PickTile((int)(xtilepos) - 0, (int)(ytilepos) - 1, player.HeldItem.pick);
+                                        if (!Main.tileAxe[Main.tile[xtilepos - 0, ytilepos - 1].TileType])
+                                            player.PickTile((int)(xtilepos) - 0, (int)(ytilepos) - 1, player.HeldItem.pick);
 
-                                            if (!Main.tileAxe[woodtopright.TileType])
-                                                player.PickTile((int)(xtilepos) + 1, (int)(ytilepos) - 1, player.HeldItem.pick);
+                                        if (!Main.tileAxe[Main.tile[xtilepos + 1, ytilepos - 1].TileType])
+                                            player.PickTile((int)(xtilepos) + 1, (int)(ytilepos) - 1, player.HeldItem.pick);
 
-                                            if (!Main.tileAxe[woodmidleft.TileType])
-                                                player.PickTile((int)(xtilepos) - 1, (int)(ytilepos) - 0, player.HeldItem.pick);
+                                        if (!Main.tileAxe[Main.tile[xtilepos - 1, ytilepos - 0].TileType])
+                                            player.PickTile((int)(xtilepos) - 1, (int)(ytilepos) - 0, player.HeldItem.pick);
 
-                                            if (!Main.tileAxe[woodmidright.TileType])
-                                                player.PickTile((int)(xtilepos) + 1, (int)(ytilepos) - 0, player.HeldItem.pick);
+                                        if (!Main.tileAxe[Main.tile[xtilepos + 1, ytilepos - 0].TileType])
+                                            player.PickTile((int)(xtilepos) + 1, (int)(ytilepos) - 0, player.HeldItem.pick);
 
-                                            if (!Main.tileAxe[woodbottomleft.TileType])
-                                                player.PickTile((int)(xtilepos) - 1, (int)(ytilepos) + 1, player.HeldItem.pick);
+                                        if (!Main.tileAxe[Main.tile[xtilepos - 1, ytilepos + 1].TileType])
+                                            player.PickTile((int)(xtilepos) - 1, (int)(ytilepos) + 1, player.HeldItem.pick);
 
-                                            if (!Main.tileAxe[woodbottommid.TileType])
-                                                player.PickTile((int)(xtilepos) - 0, (int)(ytilepos) + 1, player.HeldItem.pick);
+                                        if (!Main.tileAxe[Main.tile[xtilepos - 0, ytilepos + 1].TileType])
+                                            player.PickTile((int)(xtilepos) - 0, (int)(ytilepos) + 1, player.HeldItem.pick);
 
-                                            if (!Main.tileAxe[woodbottomright.TileType])
-                                                player.PickTile((int)(xtilepos) + 1, (int)(ytilepos) + 1, player.HeldItem.pick);
-                                        }
-                                        //hammer
-                                        if (player.HeldItem.hammer >= 1)
-                                        {
-                                            player.PickWall((int)(xtilepos) - 1, (int)(ytilepos) - 1, player.HeldItem.hammer);
-                                            player.PickWall((int)(xtilepos) - 0, (int)(ytilepos) - 1, player.HeldItem.hammer);
-                                            player.PickWall((int)(xtilepos) + 1, (int)(ytilepos) - 1, player.HeldItem.hammer);
-                                            player.PickWall((int)(xtilepos) - 1, (int)(ytilepos) - 0, player.HeldItem.hammer);
-                                            player.PickWall((int)(xtilepos) + 1, (int)(ytilepos) - 0, player.HeldItem.hammer);
-                                            player.PickWall((int)(xtilepos) - 1, (int)(ytilepos) + 1, player.HeldItem.hammer);
-                                            player.PickWall((int)(xtilepos) - 0, (int)(ytilepos) + 1, player.HeldItem.hammer);
-                                            player.PickWall((int)(xtilepos) + 1, (int)(ytilepos) + 1, player.HeldItem.hammer);
-                                        }
-                                    }
-                                }
-
-                                else //smart cursor mining
-                                {
-
-                                    Tile woodcentersmrt = Main.tile[Main.SmartCursorX, Main.SmartCursorY];
-                                    Tile woodtopleftsmrt = Main.tile[Main.SmartCursorX - 1, Main.SmartCursorY - 1];
-                                    Tile woodtopmidsmrt = Main.tile[Main.SmartCursorX - 0, Main.SmartCursorY - 1];
-                                    Tile woodtoprightsmrt = Main.tile[Main.SmartCursorX + 1, Main.SmartCursorY - 1];
-                                    Tile woodmidleftsmrt = Main.tile[Main.SmartCursorX - 1, Main.SmartCursorY - 0];
-                                    Tile woodmidrightsmrt = Main.tile[Main.SmartCursorX + 1, Main.SmartCursorY - 0];
-                                    Tile woodbottomleftsmrt = Main.tile[Main.SmartCursorX - 1, Main.SmartCursorY + 1];
-                                    Tile woodbottommidsmrt = Main.tile[Main.SmartCursorX + 0, Main.SmartCursorY + 1];
-                                    Tile woodbottomrightsmrt = Main.tile[Main.SmartCursorX + 1, Main.SmartCursorY + 1];
-                                    //pickaxe, make sure not wood
-                                    if (player.HeldItem.pick >= 1 && !Main.tileAxe[woodcentersmrt.TileType] && (Main.tile[xtilepos, ytilepos].HasTile))
-
-                                    {
-                                        //stop wood being mined
-                                        if (!Main.tileAxe[woodtopleftsmrt.TileType])
-                                            player.PickTile((int)(Main.SmartCursorX) - 1, (int)(Main.SmartCursorY) - 1, player.HeldItem.pick);
-
-                                        if (!Main.tileAxe[woodtopmidsmrt.TileType])
-                                            player.PickTile((int)(Main.SmartCursorX) - 0, (int)(Main.SmartCursorY) - 1, player.HeldItem.pick);
-
-                                        if (!Main.tileAxe[woodtoprightsmrt.TileType])
-                                            player.PickTile((int)(Main.SmartCursorX) + 1, (int)(Main.SmartCursorY) - 1, player.HeldItem.pick);
-
-                                        if (!Main.tileAxe[woodmidleftsmrt.TileType])
-
-                                            player.PickTile((int)(Main.SmartCursorX) - 1, (int)(Main.SmartCursorY) - 0, player.HeldItem.pick);
-
-                                        if (!Main.tileAxe[woodmidrightsmrt.TileType])
-
-                                            player.PickTile((int)(Main.SmartCursorX) + 1, (int)(Main.SmartCursorY) - 0, player.HeldItem.pick);
-
-                                        if (!Main.tileAxe[woodbottomleftsmrt.TileType])
-
-                                            player.PickTile((int)(Main.SmartCursorX) - 1, (int)(Main.SmartCursorY) + 1, player.HeldItem.pick);
-
-                                        if (!Main.tileAxe[woodbottommidsmrt.TileType])
-
-                                            player.PickTile((int)(Main.SmartCursorX) - 0, (int)(Main.SmartCursorY) + 1, player.HeldItem.pick);
-
-                                        if (!Main.tileAxe[woodbottomrightsmrt.TileType])
-
-                                            player.PickTile((int)(Main.SmartCursorX) + 1, (int)(Main.SmartCursorY) + 1, player.HeldItem.pick);
+                                        if (!Main.tileAxe[Main.tile[xtilepos + 1, ytilepos + 1].TileType])
+                                            player.PickTile((int)(xtilepos) + 1, (int)(ytilepos) + 1, player.HeldItem.pick);
                                     }
                                     //hammer
                                     if (player.HeldItem.hammer >= 1)
                                     {
-                                        player.PickWall((int)(Main.SmartCursorX) - 1, (int)(Main.SmartCursorY) - 1, player.HeldItem.hammer);
-                                        player.PickWall((int)(Main.SmartCursorX) - 0, (int)(Main.SmartCursorY) - 1, player.HeldItem.hammer);
-                                        player.PickWall((int)(Main.SmartCursorX) + 1, (int)(Main.SmartCursorY) - 1, player.HeldItem.hammer);
-                                        player.PickWall((int)(Main.SmartCursorX) - 1, (int)(Main.SmartCursorY) - 0, player.HeldItem.hammer);
-                                        player.PickWall((int)(Main.SmartCursorX) + 1, (int)(Main.SmartCursorY) - 0, player.HeldItem.hammer);
-                                        player.PickWall((int)(Main.SmartCursorX) - 1, (int)(Main.SmartCursorY) + 1, player.HeldItem.hammer);
-                                        player.PickWall((int)(Main.SmartCursorX) - 0, (int)(Main.SmartCursorY) + 1, player.HeldItem.hammer);
-                                        player.PickWall((int)(Main.SmartCursorX) + 1, (int)(Main.SmartCursorY) + 1, player.HeldItem.hammer);
+                                        player.PickWall((int)(xtilepos) - 1, (int)(ytilepos) - 1, player.HeldItem.hammer);
+                                        player.PickWall((int)(xtilepos) - 0, (int)(ytilepos) - 1, player.HeldItem.hammer);
+                                        player.PickWall((int)(xtilepos) + 1, (int)(ytilepos) - 1, player.HeldItem.hammer);
+                                        player.PickWall((int)(xtilepos) - 1, (int)(ytilepos) - 0, player.HeldItem.hammer);
+                                        player.PickWall((int)(xtilepos) + 1, (int)(ytilepos) - 0, player.HeldItem.hammer);
+                                        player.PickWall((int)(xtilepos) - 1, (int)(ytilepos) + 1, player.HeldItem.hammer);
+                                        player.PickWall((int)(xtilepos) - 0, (int)(ytilepos) + 1, player.HeldItem.hammer);
+                                        player.PickWall((int)(xtilepos) + 1, (int)(ytilepos) + 1, player.HeldItem.hammer);
                                     }
                                 }
                                 minetime = 0;
@@ -757,7 +691,6 @@ namespace StormQoL
 
                         if (item.useTime == 0) //sadly
                             item.useTime = 1;
-
                     }
                 }
             }
@@ -774,7 +707,6 @@ namespace StormQoL
                     }
                 }
             }
-
             if (GetInstance<Configurations>().SpeedPlace == "Insanely Fast") //Insanely Fast placement
             {
                 if (player == Main.LocalPlayer)
@@ -790,7 +722,6 @@ namespace StormQoL
     }
     public class Configplayereffects : ModPlayer //QoL for the world
     {
-        
         public override void PostUpdateEquips() //Updates every frame
         {
             if (GetInstance<Configurations>().SpeedPlace == "Fast") //Fast placement
